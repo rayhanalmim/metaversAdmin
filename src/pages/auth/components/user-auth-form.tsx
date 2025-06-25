@@ -1,144 +1,56 @@
-import { HTMLAttributes, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { useNavigate, Link } from 'react-router-dom'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { GoogleLogin, CredentialResponse } from '@react-oauth/google'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/custom/button'
-import { PasswordInput } from '@/components/custom/password-input'
+import React, { useState } from 'react'
 import { cn } from '@/lib/utils'
-import { useUser } from '@/context/UserContext'
-import { Separator } from '@/components/ui/separator'
+import { Button } from '@/components/custom/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Icons } from '@/components/icons'
+import { useAuth } from '@/context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
-interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {
-  isSignUp?: boolean;
-}
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
-const API_URL = 'http://localhost:8000';
-
-const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: 'Please enter your email' })
-    .email({ message: 'Invalid email address' }),
-  password: z
-    .string()
-    .min(1, {
-      message: 'Please enter your password',
-    })
-    .min(7, {
-      message: 'Password must be at least 7 characters long',
-    }),
-  confirmPassword: z
-    .string()
-    .optional(),
-}).refine((data) => {
-  if (data.confirmPassword !== undefined) {
-    return data.password === data.confirmPassword;
-  }
-  return true;
-}, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
-
-export function UserAuthForm({ className, isSignUp = false, ...props }: UserAuthFormProps) {
+export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState('')
+  const { login, googleSignIn } = useAuth()
   const navigate = useNavigate()
-  const { setUser } = useUser()
 
-  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+  async function onSubmit(event: React.SyntheticEvent) {
+    event.preventDefault()
+    setIsLoading(true)
+    setError('')
+
     try {
-      setError(null)
-      if (!credentialResponse.credential) {
-        throw new Error('No credentials received from Google')
+      const success = await login(email, password)
+      if (success) {
+        navigate('/dashboard')
+      } else {
+        setError('Invalid credentials or insufficient permissions. Please check your email and password.')
       }
-
-      const decoded = JSON.parse(atob(credentialResponse.credential.split('.')[1]))
-
-      const authResponse = await fetch(`${API_URL}/auth/google`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          email: decoded.email,
-          name: decoded.name,
-          google_id: decoded.sub
-        }),
-      })
-
-      if (!authResponse.ok) {
-        const errorData = await authResponse.json().catch(() => ({}))
-        throw new Error(errorData.detail || 'Failed to authenticate with Google')
-      }
-
-      const { user, access_token } = await authResponse.json()
-
-      localStorage.setItem('user', JSON.stringify(user))
-      localStorage.setItem('token', access_token)
-      setUser(user)
-
-      // Redirect to dashboard after successful authentication
-      navigate('/dashboard')
     } catch (error) {
-      console.error('Google login error:', error)
-      setError(error instanceof Error ? error.message : 'Failed to authenticate with Google')
+      setError('Login failed. Please try again.')
+      console.error('Login error:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-      ...(isSignUp && { confirmPassword: '' }),
-    },
-  })
-
-  async function onSubmit(data: z.infer<typeof formSchema>) {
+  async function handleGoogleSignIn() {
     setIsLoading(true)
+    setError('')
 
     try {
-      const endpoint = isSignUp ? 'register' : 'login'
-      const response = await fetch(`${API_URL}/auth/${endpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-          ...(isSignUp && { name: data.email.split('@')[0] })
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error(isSignUp ? 'Failed to register' : 'Failed to login')
+      const success = await googleSignIn()
+      if (success) {
+        navigate('/dashboard')
+      } else {
+        setError('Google sign-in failed or insufficient permissions.')
       }
-
-      const { user, access_token } = await response.json()
-
-      localStorage.setItem('user', JSON.stringify(user))
-      localStorage.setItem('token', access_token)
-      setUser(user)
-
-      // Redirect to dashboard after successful authentication
-      navigate('/dashboard')
     } catch (error) {
-      console.error('Authentication error:', error)
-      setError(error instanceof Error ? error.message : 'Authentication failed')
+      setError('Google sign-in failed. Please try again.')
+      console.error('Google sign-in error:', error)
     } finally {
       setIsLoading(false)
     }
@@ -146,107 +58,82 @@ export function UserAuthForm({ className, isSignUp = false, ...props }: UserAuth
 
   return (
     <div className={cn('grid gap-6', className)} {...props}>
-      {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded p-3 text-sm text-red-500">
-          {error}
-        </div>
-      )}
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name='email'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">Email</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder='name@example.com'
-                    {...field}
-                    className="bg-gray-900/50 border-gray-800 text-white"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='password'
-            render={({ field }) => (
-              <FormItem>
-                <div className='flex items-center justify-between'>
-                  <FormLabel className="text-white">Password</FormLabel>
-                  {!isSignUp && (
-                    <Link
-                      to='/forgot-password'
-                      className='text-sm font-medium text-blue-400 hover:text-blue-300'
-                    >
-                      Forgot password?
-                    </Link>
-                  )}
-                </div>
-                <FormControl>
-                  <PasswordInput
-                    placeholder='********'
-                    {...field}
-                    className="bg-gray-900/50 border-gray-800 text-white"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {isSignUp && (
-            <FormField
-              control={form.control}
-              name='confirmPassword'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white">Confirm Password</FormLabel>
-                  <FormControl>
-                    <PasswordInput
-                      placeholder='********'
-                      {...field}
-                      className="bg-gray-900/50 border-gray-800 text-white"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+      <form onSubmit={onSubmit}>
+        <div className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              placeholder="name@example.com"
+              type="email"
+              autoCapitalize="none"
+              autoComplete="email"
+              autoCorrect="off"
+              disabled={isLoading}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              placeholder="Enter your password"
+              type="password"
+              autoCapitalize="none"
+              autoComplete="current-password"
+              autoCorrect="off"
+              disabled={isLoading}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          {error && (
+            <div className="text-sm text-red-500 bg-red-50 p-3 rounded-md border border-red-200">
+              {error}
+            </div>
           )}
-          <Button
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
-            loading={isLoading}
-          >
-            {isSignUp ? 'Sign Up' : 'Sign In'}
+          <Button disabled={isLoading || !email.trim() || !password.trim()}>
+            {isLoading && (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Sign In
           </Button>
+        </div>
+      </form>
 
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full border-gray-800" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-black px-2 text-gray-500">Or continue with</span>
-            </div>
-          </div>
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">
+            Or continue with
+          </span>
+        </div>
+      </div>
 
-          <div className="flex justify-center">
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={() => {
-                setError('Failed to authenticate with Google')
-              }}
-              useOneTap={false}
-              theme="filled_black"
-              size="large"
-              width={300}
-              context="signin"
-            />
-          </div>
-        </form>
-      </Form>
+      <Button
+        variant="outline"
+        type="button"
+        disabled={isLoading}
+        onClick={handleGoogleSignIn}
+      >
+        {isLoading ? (
+          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <Icons.google className="mr-2 h-4 w-4" />
+        )}
+        Google
+      </Button>
+
+      <div className="text-center text-sm text-muted-foreground">
+        <p>Admin access only. Please use your authorized credentials.</p>
+        <p className="mt-1">Default admin: <code className="bg-gray-100 px-1 rounded">222015010@student.green.edu.bd</code></p>
+        <p className="text-xs mt-1">Password: <code className="bg-gray-100 px-1 rounded">admin123</code></p>
+      </div>
     </div>
   )
 }

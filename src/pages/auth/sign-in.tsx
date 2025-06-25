@@ -3,18 +3,27 @@ import { motion } from 'framer-motion';
 import { UserAuthForm } from './components/user-auth-form';
 import { Bot } from 'lucide-react';
 import { useEffect } from 'react';
-import { useUser } from '@/context/UserContext';
+import { useAuth } from '@/context/AuthContext';
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useUser();
+  const { isAuthenticated, loading } = useAuth();
 
   useEffect(() => {
     // If user is authenticated, redirect to dashboard
-    if (isAuthenticated) {
+    if (isAuthenticated && !loading) {
       navigate('/dashboard');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, loading, navigate]);
+
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black relative isolate overflow-hidden flex items-center justify-center">
@@ -40,7 +49,7 @@ export default function SignIn() {
           >
             <Bot className="h-6 w-6 text-blue-400" />
             <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">
-              AI Assistant
+              Admin Dashboard
             </span>
           </motion.div>
           <motion.h1
@@ -49,7 +58,7 @@ export default function SignIn() {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="text-2xl font-semibold tracking-tight text-white"
           >
-            Welcome back
+            Admin Access
           </motion.h1>
           <motion.p
             initial={{ y: 20, opacity: 0 }}
@@ -57,7 +66,7 @@ export default function SignIn() {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="text-sm text-gray-400"
           >
-            Enter your email to sign in to your account
+            Enter your admin token to access the dashboard
           </motion.p>
         </div>
         <motion.div
@@ -74,12 +83,7 @@ export default function SignIn() {
           transition={{ delay: 0.5, duration: 0.5 }}
           className="text-center text-sm text-gray-400"
         >
-          <Link
-            to="/sign-up"
-            className="hover:text-brand underline underline-offset-4 text-blue-400 hover:text-blue-300 transition-colors"
-          >
-            Don&apos;t have an account? Sign Up
-          </Link>
+          Admin access required for dashboard management
         </motion.p>
       </div>
     </div>
