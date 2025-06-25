@@ -9,24 +9,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useUser } from '@/context/UserContext'
+import { useAuth } from '@/context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { User, CreditCard, Settings, LogOut } from 'lucide-react'
 
 export function UserNav() {
-  const { user, setUser } = useUser()
+  const { user, logout } = useAuth()
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    localStorage.removeItem('user')
-    localStorage.removeItem('organization')
-    setUser(null)
-    navigate('/')
+    logout()
+    navigate('/sign-in')
   }
 
   // Get user initials for avatar fallback
   const getInitials = () => {
-    if (!user?.name) return 'U'
+    if (!user?.name) return 'A'
     return user.name
       .split(' ')
       .map(n => n[0])
@@ -39,7 +37,7 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
           <Avatar className='h-8 w-8'>
-            <AvatarImage src='https://bayshore.nyc3.cdn.digitaloceanspaces.com/ai_bot/avatars/61f75ea9a680def2ed1c6929fe75aeee.jpg' alt={user?.name || 'User'} />
+            <AvatarImage src='https://bayshore.nyc3.cdn.digitaloceanspaces.com/ai_bot/avatars/61f75ea9a680def2ed1c6929fe75aeee.jpg' alt={user?.name || 'Admin'} />
             <AvatarFallback>{getInitials()}</AvatarFallback>
           </Avatar>
         </Button>
