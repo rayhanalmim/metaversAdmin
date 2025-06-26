@@ -22,6 +22,7 @@ interface OverviewTabProps {
         health: boolean;
         usage: boolean;
     };
+    onShowOrgStats: () => void;
 }
 
 export const OverviewTab = ({
@@ -31,30 +32,56 @@ export const OverviewTab = ({
     systemHealth,
     usageAnalytics,
     loading,
+    onShowOrgStats
 }: OverviewTabProps) => {
     return (
-        <div className="space-y-6">
-            <OverviewStatsCards dashboardStats={dashboardStats} loading={loading.dashboard} />
+        <div className="space-y-4">
+            <OverviewStatsCards
+                dashboardStats={dashboardStats}
+                loading={loading.dashboard}
+                onShowOrgStats={onShowOrgStats}
+            />
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <SystemPerformance businessInsights={businessInsights} realtimeStats={realtimeStats} loading={loading.insights} />
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                <SystemPerformance
+                    businessInsights={businessInsights}
+                    realtimeStats={realtimeStats}
+                    loading={loading.insights}
+                />
                 <QuickActions />
+                <RevenueBreakdown
+                    businessInsights={businessInsights}
+                    loading={loading.insights}
+                />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <RevenueBreakdown businessInsights={businessInsights} loading={loading.insights} />
-                <GrowthMetrics businessInsights={businessInsights} loading={loading.insights} />
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+                <GrowthMetrics
+                    businessInsights={businessInsights}
+                    loading={loading.insights}
+                />
+                <RecentActivity
+                    systemHealth={systemHealth}
+                    loading={loading.health}
+                />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <RecentActivity systemHealth={systemHealth} loading={loading.health} />
-                <SystemStatus systemHealth={systemHealth} realtimeStats={realtimeStats} loading={loading.health} />
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+                <TopPerformingOrganizations
+                    usageAnalytics={usageAnalytics}
+                    loading={loading.usage}
+                />
+                <SystemStatus
+                    systemHealth={systemHealth}
+                    realtimeStats={realtimeStats}
+                    loading={loading.health}
+                />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <TopPerformingOrganizations usageAnalytics={usageAnalytics} loading={loading.usage} />
-                <UsageStatistics usageAnalytics={usageAnalytics} loading={loading.usage} />
-            </div>
+            <UsageStatistics
+                usageAnalytics={usageAnalytics}
+                loading={loading.usage}
+            />
         </div>
     );
 }; 

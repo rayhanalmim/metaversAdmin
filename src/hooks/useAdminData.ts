@@ -205,7 +205,7 @@ export const useActiveUsers = () => {
 };
 
 // Custom hook for organization statistics
-export const useOrganizationStats = () => {
+export const useOrganizationStats = (fromDate?: Date, toDate?: Date) => {
     const { organizations, orgsLoading } = useAdminData();
 
     const stats = useMemo(() => {
@@ -218,29 +218,36 @@ export const useOrganizationStats = () => {
             };
         }
 
-        const tierDistribution = organizations.reduce((acc: Record<string, number>, org) => {
+        // Filter organizations based on date range if provided
+        const filteredOrganizations = organizations.filter(org => {
+            if (!fromDate || !toDate) return true;
+            const createdAt = new Date(org.created_at);
+            return createdAt >= fromDate && createdAt <= toDate;
+        });
+
+        const tierDistribution = filteredOrganizations.reduce((acc: Record<string, number>, org) => {
             const tier = org.subscription_tier || 'free';
             acc[tier] = (acc[tier] || 0) + 1;
             return acc;
         }, {});
 
-        const statusDistribution = organizations.reduce((acc: Record<string, number>, org) => {
+        const statusDistribution = filteredOrganizations.reduce((acc: Record<string, number>, org) => {
             const status = org.subscription_status || 'unknown';
             acc[status] = (acc[status] || 0) + 1;
             return acc;
         }, {});
 
-        const topOrganizations = organizations
+        const topOrganizations = filteredOrganizations
             .sort((a, b) => (b.total_conversations || 0) - (a.total_conversations || 0))
             .slice(0, 5);
 
         return {
-            totalOrganizations: organizations.length,
+            totalOrganizations: filteredOrganizations.length,
             tierDistribution,
             statusDistribution,
             topOrganizations
         };
-    }, [organizations]);
+    }, [organizations, fromDate, toDate]);
 
     return { ...stats, loading: orgsLoading };
 };

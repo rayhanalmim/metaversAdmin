@@ -20,17 +20,19 @@ import AdminAPI, {
     OrganizationUsageAdmin
 } from '@/services/api';
 
-import { OrganizationUsageModal } from './components/OrganizationUsageModal';
+import { OrganizationDetails } from './components/OrganizationDetails';
 import { OverviewTab } from './components/OverviewTab';
 import { OrganizationsTab } from './components/OrganizationsTab';
 import { ConversationsTab } from './components/ConversationsTab';
 import { AnalyticsTab } from './components/AnalyticsTab';
 import { SubscriptionsTab } from './components/SubscriptionsTab';
-import { downloadCSV, generateCSV } from './utils';
+import { OrganizationStatsPage } from './components/OrganizationStatsPage';
+import { downloadCSV, generateCSV, formatDateTime, formatCurrency } from './utils';
 
 export default function Dashboard() {
     const [activeTab, setActiveTab] = useState('overview');
     const [refreshing, setRefreshing] = useState(false);
+    const [showOrgStats, setShowOrgStats] = useState(false);
 
     // State for API data
     const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
@@ -58,10 +60,9 @@ export default function Dashboard() {
         usage: true
     });
 
-    // Organization modal state
+    // Organization state
     const [selectedOrganization, setSelectedOrganization] = useState<Organization | null>(null);
     const [organizationUsage, setOrganizationUsage] = useState<OrganizationUsageAdmin | null>(null);
-    const [isOrganizationModalOpen, setIsOrganizationModalOpen] = useState(false);
     const [loadingOrgUsage, setLoadingOrgUsage] = useState(false);
 
     const fetchAllData = async () => {
@@ -145,7 +146,6 @@ export default function Dashboard() {
 
     const handleOrganizationClick = async (organization: Organization) => {
         setSelectedOrganization(organization);
-        setIsOrganizationModalOpen(true);
         setLoadingOrgUsage(true);
         try {
             const usage = await AdminAPI.getOrganizationUsageAdmin(organization.id);
@@ -157,25 +157,14 @@ export default function Dashboard() {
         }
     };
 
+    const handleBackToOrganizations = () => {
+        setSelectedOrganization(null);
+        setOrganizationUsage(null);
+    };
+
     const handleExport = () => {
         let data;
         let filename;
-
-        const formatDate = (dateStr: string) => {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: '2-digit'
-            });
-        };
-
-        const formatCurrency = (amount: number) => {
-            return new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD'
-            }).format(amount);
-        };
 
         // Prepare data structures
         const orgData = [
@@ -231,7 +220,7 @@ export default function Dashboard() {
                 '': conv.organization_name || 'N/A',
                 'MESSAGE INFO': conv.role?.toUpperCase() || 'SYSTEM',
                 ' ': conv.content,
-                'TIMESTAMP': formatDate(conv.created_at)
+                'TIMESTAMP': formatDateTime(conv.created_at)
             }))
         ];
 
@@ -259,8 +248,8 @@ export default function Dashboard() {
                 'ORGANIZATION INFO': sub.organization_name || 'N/A',
                 '': sub.subscription_status?.toUpperCase() || 'INACTIVE',
                 'SUBSCRIPTION DETAILS': sub.subscription_tier?.toUpperCase() || 'FREE',
-                ' ': formatDate(sub.current_period_start),
-                'BILLING': formatDate(sub.current_period_end),
+                ' ': formatDateTime(sub.current_period_start),
+                'BILLING': formatDateTime(sub.current_period_end),
                 '  ': formatCurrency(sub.payment_amount)
             }))
         ];
@@ -318,47 +307,60 @@ export default function Dashboard() {
                         </Button>
                     </div>
                 </div>
-                <Tabs value={activeTab} onValueChange={setActiveTab} className='space-y-4 my-3'>
-                    <TabsList className='mb-2'>
-                        <TabsTrigger value='overview'>Overview</TabsTrigger>
-                        <TabsTrigger value='organizations'>Organizations</TabsTrigger>
-                        <TabsTrigger value='conversations'>Conversations</TabsTrigger>
-                        <TabsTrigger value='analytics'>Analytics</TabsTrigger>
-                        <TabsTrigger value='subscriptions'>Subscriptions</TabsTrigger>
+                <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className='my-3'>
+                    <TabsList className='mb-3'>
+                        <TabsTrigger value="overview">Overview</TabsTrigger>
+                        <TabsTrigger value="organizations">Organizations</TabsTrigger>
+                        <TabsTrigger value="conversations">Conversations</TabsTrigger>
+                        <TabsTrigger value="analytics">Analytics</TabsTrigger>
+                        <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
                     </TabsList>
-
-                    <TabsContent value='overview' className='space-y-4'>
-                        <OverviewTab
-                            loading={loading}
-                            dashboardStats={dashboardStats}
-                            realtimeStats={realtimeStats}
-                            businessInsights={businessInsights}
-                            systemHealth={systemHealth}
-                            usageAnalytics={usageAnalytics}
-                        />
+                    <TabsContent value="overview" className="space-y-4">
+                        {showOrgStats ? (
+                            <OrganizationStatsPage onBack={() => setShowOrgStats(false)} />
+                        ) : (
+                            <OverviewTab
+                                dashboardStats={dashboardStats}
+                                realtimeStats={realtimeStats}
+                                businessInsights={businessInsights}
+                                systemHealth={systemHealth}
+                                usageAnalytics={usageAnalytics}
+                                loading={loading}
+                                onShowOrgStats={() => setShowOrgStats(true)}
+                            />
+                        )}
                     </TabsContent>
-                    <TabsContent value='organizations' className='space-y-4'>
-                        <OrganizationsTab
-                            loading={loading.organizations}
-                            organizations={organizations}
-                            handleOrganizationClick={handleOrganizationClick}
-                        />
+                    <TabsContent value="organizations" className="space-y-4">
+                        {selectedOrganization ? (
+                            <OrganizationDetails
+                                organization={selectedOrganization}
+                                organizationUsage={organizationUsage}
+                                loading={loadingOrgUsage}
+                                onBack={handleBackToOrganizations}
+                            />
+                        ) : (
+                            <OrganizationsTab
+                                organizations={organizations}
+                                loading={loading.organizations}
+                                handleOrganizationClick={handleOrganizationClick}
+                            />
+                        )}
                     </TabsContent>
-                    <TabsContent value='conversations' className='space-y-4'>
-                        <ConversationsTab loading={loading.conversations} conversations={conversations} />
+                    <TabsContent value="conversations" className="space-y-4">
+                        <ConversationsTab conversations={conversations} loading={loading.conversations} />
                     </TabsContent>
-                    <TabsContent value='analytics' className='space-y-4'>
+                    <TabsContent value="analytics" className="space-y-4">
                         <AnalyticsTab
                             analyticsData={analyticsData}
+                            subscriptionDistribution={subscriptionDistribution}
                             loadingAnalytics={loading.analytics}
+                            loadingDistribution={loading.distribution}
                             dashboardStats={dashboardStats}
                             realtimeStats={realtimeStats}
                             loadingInsights={loading.insights}
-                            subscriptionDistribution={subscriptionDistribution}
-                            loadingDistribution={loading.distribution}
                         />
                     </TabsContent>
-                    <TabsContent value='subscriptions' className='space-y-4'>
+                    <TabsContent value="subscriptions" className="space-y-4">
                         <SubscriptionsTab
                             subscriptions={subscriptions}
                             loadingSubscriptions={loading.subscriptions}
@@ -367,14 +369,6 @@ export default function Dashboard() {
                         />
                     </TabsContent>
                 </Tabs>
-
-                <OrganizationUsageModal
-                    isOpen={isOrganizationModalOpen}
-                    onOpenChange={setIsOrganizationModalOpen}
-                    selectedOrganization={selectedOrganization}
-                    organizationUsage={organizationUsage}
-                    loadingOrgUsage={loadingOrgUsage}
-                />
             </Layout.Body>
         </Layout>
     );

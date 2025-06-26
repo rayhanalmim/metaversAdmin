@@ -6,12 +6,16 @@ import { formatCurrency, formatNumber } from '../utils';
 interface OverviewStatsCardsProps {
     dashboardStats: DashboardStats | null;
     loading: boolean;
+    onShowOrgStats: () => void;
 }
 
-export const OverviewStatsCards = ({ dashboardStats, loading }: OverviewStatsCardsProps) => {
+export const OverviewStatsCards = ({ dashboardStats, loading, onShowOrgStats }: OverviewStatsCardsProps) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            <Card className="bg-gradient-to-br from-amber-50/70 to-orange-50/50 dark:from-slate-800/90 dark:to-slate-700/80 border-amber-100/60 dark:border-slate-600/50 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:shadow-slate-900/30">
+            <Card
+                className="bg-gradient-to-br from-amber-50/70 to-orange-50/50 dark:from-slate-800/90 dark:to-slate-700/80 border-amber-100/60 dark:border-slate-600/50 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:shadow-slate-900/30 cursor-pointer"
+                onClick={onShowOrgStats}
+            >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium text-amber-600 dark:text-amber-300">Organizations</CardTitle>
                     <div className="p-2 bg-gradient-to-br from-amber-400/80 to-orange-500/80 dark:from-amber-500/90 dark:to-orange-600/90 rounded-lg shadow-sm">
