@@ -578,13 +578,13 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Layout className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-700/50">
+    <div className="min-h-screen bg-gray-100 dark:bg-slate-950">
+      <Layout className="bg-white/95 dark:bg-slate-950 backdrop-blur-sm border-b border-gray-200/50 dark:border-slate-700/50">
         {/* Professional Header */}
-        <Layout.Header className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-700/50">
+        <Layout.Header className="bg-white/95 dark:bg-slate-950 backdrop-blur-sm border-b border-gray-200/50 dark:border-slate-700/50">
           <div className="flex items-center">
             <div className="flex items-center space-x-3">
-              <div className="p-2.5 bg-gradient-to-br from-slate-600 to-slate-700 rounded-lg shadow-sm">
+              <div className="p-2.5 bg-gradient-to-br from-slate-600 to-slate-700 dark:from-slate-700 dark:to-slate-800 rounded-lg shadow-sm">
                 <BarChart3 className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -602,12 +602,12 @@ export default function Dashboard() {
                 size="sm"
                 onClick={handleRefresh}
                 disabled={refreshing}
-                className="border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                className="border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
               >
                 <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
                 Refresh
               </Button>
-              <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
+              <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
                 <Download className="w-4 h-4 mr-2" />
                 Export
               </Button>
@@ -619,7 +619,7 @@ export default function Dashboard() {
         </Layout.Header>
 
         {/* Main Content */}
-        <Layout.Body className="bg-transparent p-6">
+        <Layout.Body className="bg-gray-50 dark:bg-slate-950 p-6">
           {/* Time Range Selector */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-4">
@@ -633,7 +633,7 @@ export default function Dashboard() {
                 variant={timeRange === '7d' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setTimeRange('7d')}
-                className={timeRange === '7d' ? 'bg-slate-900 hover:bg-slate-800 text-white' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}
+                className={timeRange === '7d' ? 'bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-700 dark:hover:bg-slate-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700'}
               >
                 7D
               </Button>
@@ -641,7 +641,7 @@ export default function Dashboard() {
                 variant={timeRange === '30d' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setTimeRange('30d')}
-                className={timeRange === '30d' ? 'bg-slate-900 hover:bg-slate-800 text-white' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}
+                className={timeRange === '30d' ? 'bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-700 dark:hover:bg-slate-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700'}
               >
                 30D
               </Button>
@@ -649,7 +649,7 @@ export default function Dashboard() {
                 variant={timeRange === '90d' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setTimeRange('90d')}
-                className={timeRange === '90d' ? 'bg-slate-900 hover:bg-slate-800 text-white' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}
+                className={timeRange === '90d' ? 'bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-700 dark:hover:bg-slate-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700'}
               >
                 90D
               </Button>
@@ -657,12 +657,12 @@ export default function Dashboard() {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border border-slate-200/80 dark:border-slate-700/80 shadow-sm">
-              <TabsTrigger value="overview" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 hover:text-slate-900">Overview</TabsTrigger>
-              <TabsTrigger value="organizations" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 hover:text-slate-900">Organizations</TabsTrigger>
-              <TabsTrigger value="conversations" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 hover:text-slate-900">Conversations</TabsTrigger>
-              <TabsTrigger value="analytics" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 hover:text-slate-900">Analytics</TabsTrigger>
-              <TabsTrigger value="subscriptions" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 hover:text-slate-900">Subscriptions</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-5 bg-white/90 dark:bg-slate-800/95 backdrop-blur-sm border border-slate-200/80 dark:border-slate-600/80 shadow-sm">
+              <TabsTrigger value="overview" className="data-[state=active]:bg-slate-950 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100">Overview</TabsTrigger>
+              <TabsTrigger value="organizations" className="data-[state=active]:bg-slate-950 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100">Organizations</TabsTrigger>
+              <TabsTrigger value="conversations" className="data-[state=active]:bg-slate-950 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100">Conversations</TabsTrigger>
+              <TabsTrigger value="analytics" className="data-[state=active]:bg-slate-950 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100">Analytics</TabsTrigger>
+              <TabsTrigger value="subscriptions" className="data-[state=active]:bg-slate-950 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100">Subscriptions</TabsTrigger>
             </TabsList>
 
             {/* Real Data Overview Tab */}
@@ -671,44 +671,44 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
 
 
-                <Card className="bg-gradient-to-br from-amber-50/70 to-orange-50/50 dark:from-amber-950/30 dark:to-orange-900/20 border-amber-100/60 dark:border-amber-800/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+                <Card className="bg-gradient-to-br from-amber-50/70 to-orange-50/50 dark:from-slate-800/90 dark:to-slate-700/80 border-amber-100/60 dark:border-slate-600/50 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:shadow-slate-900/30">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-amber-600 dark:text-amber-400">Organizations</CardTitle>
-                    <div className="p-2 bg-gradient-to-br from-amber-400/80 to-orange-500/80 rounded-lg shadow-sm">
+                    <CardTitle className="text-sm font-medium text-amber-600 dark:text-amber-300">Organizations</CardTitle>
+                    <div className="p-2 bg-gradient-to-br from-amber-400/80 to-orange-500/80 dark:from-amber-500/90 dark:to-orange-600/90 rounded-lg shadow-sm">
                       <Building2 className="h-4 w-4 text-white" />
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-amber-800 dark:text-amber-200">
+                    <div className="text-2xl font-bold text-amber-800 dark:text-amber-100">
                       {loading.dashboard ? (
-                        <div className="h-7 w-12 bg-amber-100 dark:bg-amber-900/50 animate-pulse rounded"></div>
+                        <div className="h-7 w-12 bg-amber-100 dark:bg-slate-600 animate-pulse rounded"></div>
                       ) : (
                         formatNumber(dashboardStats?.total_organizations || 0)
                       )}
                     </div>
-                    <div className="flex items-center text-xs text-amber-500 dark:text-amber-400 mt-1 font-medium">
+                    <div className="flex items-center text-xs text-amber-500 dark:text-amber-300 mt-1 font-medium">
                       <Building2 className="w-3 h-3 mr-1" />
                       Total businesses
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-blue-50/70 to-indigo-50/50 dark:from-blue-950/30 dark:to-indigo-900/20 border-blue-100/60 dark:border-blue-800/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+                <Card className="bg-gradient-to-br from-blue-50/70 to-indigo-50/50 dark:from-slate-800/90 dark:to-slate-700/80 border-blue-100/60 dark:border-slate-600/50 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:shadow-slate-900/30">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-blue-600 dark:text-blue-400">Total Users</CardTitle>
-                    <div className="p-2 bg-gradient-to-br from-blue-400/80 to-indigo-500/80 rounded-lg shadow-sm">
+                    <CardTitle className="text-sm font-medium text-blue-600 dark:text-blue-300">Total Users</CardTitle>
+                    <div className="p-2 bg-gradient-to-br from-blue-400/80 to-indigo-500/80 dark:from-blue-500/90 dark:to-indigo-600/90 rounded-lg shadow-sm">
                       <Users className="h-4 w-4 text-white" />
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-blue-800 dark:text-blue-200">
+                    <div className="text-2xl font-bold text-blue-800 dark:text-blue-100">
                       {loading.dashboard ? (
-                        <div className="h-7 w-16 bg-blue-100 dark:bg-blue-900/50 animate-pulse rounded"></div>
+                        <div className="h-7 w-16 bg-blue-100 dark:bg-slate-600 animate-pulse rounded"></div>
                       ) : (
                         formatNumber(dashboardStats?.total_users || 0)
                       )}
                     </div>
-                    <div className="flex items-center text-xs text-blue-500 dark:text-blue-400 mt-1 font-medium">
+                    <div className="flex items-center text-xs text-blue-500 dark:text-blue-300 mt-1 font-medium">
                       <Users className="w-3 h-3 mr-1" />
                       Registered visitors
                     </div>
@@ -716,22 +716,22 @@ export default function Dashboard() {
                 </Card>
 
 
-                <Card className="bg-gradient-to-br from-violet-50/70 to-purple-50/50 dark:from-violet-950/30 dark:to-purple-900/20 border-violet-100/60 dark:border-violet-800/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+                <Card className="bg-gradient-to-br from-violet-50/70 to-purple-50/50 dark:from-slate-800/90 dark:to-slate-700/80 border-violet-100/60 dark:border-slate-600/50 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:shadow-slate-900/30">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-violet-600 dark:text-violet-400">Total Revenue</CardTitle>
-                    <div className="p-2 bg-gradient-to-br from-violet-400/80 to-purple-500/80 rounded-lg shadow-sm">
+                    <CardTitle className="text-sm font-medium text-violet-600 dark:text-violet-300">Total Revenue</CardTitle>
+                    <div className="p-2 bg-gradient-to-br from-violet-400/80 to-purple-500/80 dark:from-violet-500/90 dark:to-purple-600/90 rounded-lg shadow-sm">
                       <DollarSign className="h-4 w-4 text-white" />
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-violet-800 dark:text-violet-200">
+                    <div className="text-2xl font-bold text-violet-800 dark:text-violet-100">
                       {loading.dashboard ? (
-                        <div className="h-7 w-20 bg-violet-100 dark:bg-violet-900/50 animate-pulse rounded"></div>
+                        <div className="h-7 w-20 bg-violet-100 dark:bg-slate-600 animate-pulse rounded"></div>
                       ) : (
                         formatCurrency(dashboardStats?.total_revenue || 0)
                       )}
                     </div>
-                    <div className="flex items-center text-xs text-violet-500 dark:text-violet-400 mt-1 font-medium">
+                    <div className="flex items-center text-xs text-violet-500 dark:text-violet-300 mt-1 font-medium">
                       <DollarSign className="w-3 h-3 mr-1" />
                       Active subscriptions
                     </div>
@@ -740,22 +740,22 @@ export default function Dashboard() {
 
 
 
-                <Card className="bg-gradient-to-br from-cyan-50/70 to-teal-50/50 dark:from-cyan-950/30 dark:to-teal-900/20 border-cyan-100/60 dark:border-cyan-800/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+                <Card className="bg-gradient-to-br from-cyan-50/70 to-teal-50/50 dark:from-slate-800/90 dark:to-slate-700/80 border-cyan-100/60 dark:border-slate-600/50 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:shadow-slate-900/30">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-cyan-600 dark:text-cyan-400">Conversations</CardTitle>
-                    <div className="p-2 bg-gradient-to-br from-cyan-400/80 to-teal-500/80 rounded-lg shadow-sm">
+                    <CardTitle className="text-sm font-medium text-cyan-600 dark:text-cyan-300">Conversations</CardTitle>
+                    <div className="p-2 bg-gradient-to-br from-cyan-400/80 to-teal-500/80 dark:from-cyan-500/90 dark:to-teal-600/90 rounded-lg shadow-sm">
                       <MessageCircle className="h-4 w-4 text-white" />
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-cyan-800 dark:text-cyan-200">
+                    <div className="text-2xl font-bold text-cyan-800 dark:text-cyan-100">
                       {loading.dashboard ? (
-                        <div className="h-7 w-16 bg-cyan-100 dark:bg-cyan-900/50 animate-pulse rounded"></div>
+                        <div className="h-7 w-16 bg-cyan-100 dark:bg-slate-600 animate-pulse rounded"></div>
                       ) : (
                         formatNumber(dashboardStats?.total_conversations || 0)
                       )}
                     </div>
-                    <div className="flex items-center text-xs text-cyan-500 dark:text-cyan-400 mt-1 font-medium">
+                    <div className="flex items-center text-xs text-cyan-500 dark:text-cyan-300 mt-1 font-medium">
                       <MessageCircle className="w-3 h-3 mr-1" />
                       All time
                     </div>
@@ -766,9 +766,9 @@ export default function Dashboard() {
 
               {/* Real System Health & Performance Monitoring */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <Card className="lg:col-span-2 bg-white dark:bg-slate-800 border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+                <Card className="lg:col-span-2 bg-white dark:bg-slate-800/95 border-slate-200/60 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/20">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
                       <Activity className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                       System Performance
                     </CardTitle>
@@ -777,64 +777,64 @@ export default function Dashboard() {
                     {loading.insights ? (
                       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                         {[...Array(4)].map((_, i) => (
-                          <div key={i} className="text-center p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
-                            <div className="h-8 w-16 bg-slate-200 dark:bg-slate-700 animate-pulse rounded mx-auto mb-2"></div>
-                            <div className="h-3 w-12 bg-slate-200 dark:bg-slate-700 animate-pulse rounded mx-auto"></div>
+                          <div key={i} className="text-center p-3 bg-slate-50 dark:bg-slate-700/70 rounded-lg border dark:border-slate-600/50">
+                            <div className="h-8 w-16 bg-slate-200 dark:bg-slate-600 animate-pulse rounded mx-auto mb-2"></div>
+                            <div className="h-3 w-12 bg-slate-200 dark:bg-slate-600 animate-pulse rounded mx-auto"></div>
                           </div>
                         ))}
                       </div>
                     ) : (
                       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div className="text-center p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <div className="text-center p-3 bg-slate-50 dark:bg-slate-700/70 rounded-lg border dark:border-slate-600/50">
                           <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                             {businessInsights?.performance.system_uptime.toFixed(1)}%
                           </div>
-                          <div className="text-xs text-slate-600 dark:text-slate-400">Uptime</div>
+                          <div className="text-xs text-slate-600 dark:text-slate-300">Uptime</div>
                         </div>
-                        <div className="text-center p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <div className="text-center p-3 bg-slate-50 dark:bg-slate-700/70 rounded-lg border dark:border-slate-600/50">
                           <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                             {businessInsights?.performance.avg_response_time}ms
                           </div>
-                          <div className="text-xs text-slate-600 dark:text-slate-400">Avg Latency</div>
+                          <div className="text-xs text-slate-600 dark:text-slate-300">Avg Latency</div>
                         </div>
-                        <div className="text-center p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <div className="text-center p-3 bg-slate-50 dark:bg-slate-700/70 rounded-lg border dark:border-slate-600/50">
                           <div className="text-2xl font-bold text-violet-600 dark:text-violet-400">
                             {formatNumber(realtimeStats?.api_calls || 0)}
                           </div>
-                          <div className="text-xs text-slate-600 dark:text-slate-400">API Calls Today</div>
+                          <div className="text-xs text-slate-600 dark:text-slate-300">API Calls Today</div>
                         </div>
-                        <div className="text-center p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <div className="text-center p-3 bg-slate-50 dark:bg-slate-700/70 rounded-lg border dark:border-slate-600/50">
                           <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
                             {businessInsights?.performance.cache_hit_rate.toFixed(0)}%
                           </div>
-                          <div className="text-xs text-slate-600 dark:text-slate-400">Cache Hit Rate</div>
+                          <div className="text-xs text-slate-600 dark:text-slate-300">Cache Hit Rate</div>
                         </div>
                       </div>
                     )}
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white dark:bg-slate-800 border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+                <Card className="bg-white dark:bg-slate-800/95 border-slate-200/60 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/20">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
                       <Zap className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                       Quick Actions
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <Button variant="outline" size="sm" className="w-full justify-start border-slate-200 text-slate-600 hover:bg-slate-50">
+                    <Button variant="outline" size="sm" className="w-full justify-start border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 dark:hover:text-slate-100">
                       <Users className="w-4 h-4 mr-2" />
                       Create New Organization
                     </Button>
-                    <Button variant="outline" size="sm" className="w-full justify-start border-slate-200 text-slate-600 hover:bg-slate-50">
+                    <Button variant="outline" size="sm" className="w-full justify-start border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 dark:hover:text-slate-100">
                       <MessageSquare className="w-4 h-4 mr-2" />
                       View All Conversations
                     </Button>
-                    <Button variant="outline" size="sm" className="w-full justify-start border-slate-200 text-slate-600 hover:bg-slate-50">
+                    <Button variant="outline" size="sm" className="w-full justify-start border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 dark:hover:text-slate-100">
                       <DollarSign className="w-4 h-4 mr-2" />
                       Generate Revenue Report
                     </Button>
-                    <Button variant="outline" size="sm" className="w-full justify-start border-slate-200 text-slate-600 hover:bg-slate-50">
+                    <Button variant="outline" size="sm" className="w-full justify-start border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 dark:hover:text-slate-100">
                       <Database className="w-4 h-4 mr-2" />
                       Export Database Backup
                     </Button>
@@ -844,9 +844,9 @@ export default function Dashboard() {
 
               {/* Real Revenue Analytics & Business Insights */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="bg-white dark:bg-slate-800 border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+                <Card className="bg-white dark:bg-slate-800/95 border-slate-200/60 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/20">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
                       <DollarSign className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                       Revenue Breakdown
                     </CardTitle>
@@ -855,47 +855,47 @@ export default function Dashboard() {
                     {loading.insights ? (
                       <div className="space-y-4">
                         {[...Array(4)].map((_, i) => (
-                          <div key={i} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                          <div key={i} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/70 rounded-lg border dark:border-slate-600/50">
                             <div className="flex items-center gap-3">
-                              <div className="w-3 h-3 bg-slate-300 rounded-full"></div>
-                              <div className="h-4 w-32 bg-slate-200 dark:bg-slate-700 animate-pulse rounded"></div>
+                              <div className="w-3 h-3 bg-slate-300 dark:bg-slate-500 rounded-full"></div>
+                              <div className="h-4 w-32 bg-slate-200 dark:bg-slate-600 animate-pulse rounded"></div>
                             </div>
-                            <div className="h-4 w-16 bg-slate-200 dark:bg-slate-700 animate-pulse rounded"></div>
+                            <div className="h-4 w-16 bg-slate-200 dark:bg-slate-600 animate-pulse rounded"></div>
                           </div>
                         ))}
                       </div>
                     ) : (
                       <>
-                        <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/70 rounded-lg border dark:border-slate-600/50">
                           <div className="flex items-center gap-3">
                             <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
-                            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Monthly Recurring Revenue</span>
+                            <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Monthly Recurring Revenue</span>
                           </div>
                           <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
                             {formatCurrency(businessInsights?.revenue.monthly_recurring_revenue || 0)}
                           </span>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/70 rounded-lg border dark:border-slate-600/50">
                           <div className="flex items-center gap-3">
                             <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Average Revenue Per User</span>
+                            <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Average Revenue Per User</span>
                           </div>
                           <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
                             {formatCurrency(businessInsights?.revenue.average_revenue_per_user || 0)}
                           </span>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/70 rounded-lg border dark:border-slate-600/50">
                           <div className="flex items-center gap-3">
                             <div className="w-3 h-3 bg-violet-500 rounded-full"></div>
-                            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Active Customers</span>
+                            <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Active Customers</span>
                           </div>
                           <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
                             {businessInsights?.customers.active_customers || 0}
                           </span>
                         </div>
-                        <div className="border-t border-slate-200 dark:border-slate-700 pt-3 mt-3">
+                        <div className="border-t border-slate-200 dark:border-slate-600 pt-3 mt-3">
                           <div className="flex items-center justify-between">
-                            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Annualized Revenue</span>
+                            <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Annualized Revenue</span>
                             <span className="text-lg font-bold text-slate-900 dark:text-slate-100">
                               {formatCurrency(businessInsights?.revenue.total_revenue || 0)}
                             </span>
@@ -906,9 +906,9 @@ export default function Dashboard() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white dark:bg-slate-800 border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+                <Card className="bg-white dark:bg-slate-800/95 border-slate-200/60 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/20">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
                       <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                       Growth Metrics
                     </CardTitle>
@@ -918,10 +918,10 @@ export default function Dashboard() {
                       <div className="space-y-4">
                         {[...Array(4)].map((_, i) => (
                           <div key={i} className="flex items-center justify-between">
-                            <div className="h-4 w-32 bg-slate-200 dark:bg-slate-700 animate-pulse rounded"></div>
+                            <div className="h-4 w-32 bg-slate-200 dark:bg-slate-600 animate-pulse rounded"></div>
                             <div className="text-right">
-                              <div className="h-4 w-16 bg-slate-200 dark:bg-slate-700 animate-pulse rounded mb-1"></div>
-                              <div className="h-3 w-12 bg-slate-200 dark:bg-slate-700 animate-pulse rounded"></div>
+                              <div className="h-4 w-16 bg-slate-200 dark:bg-slate-600 animate-pulse rounded mb-1"></div>
+                              <div className="h-3 w-12 bg-slate-200 dark:bg-slate-600 animate-pulse rounded"></div>
                             </div>
                           </div>
                         ))}
@@ -929,7 +929,7 @@ export default function Dashboard() {
                     ) : (
                       <>
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-600 dark:text-slate-400">Conversation Growth</span>
+                          <span className="text-sm text-slate-600 dark:text-slate-300">Conversation Growth</span>
                           <div className="text-right">
                             <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
                               {businessInsights?.engagement.monthly_conversations || 0}
@@ -940,7 +940,7 @@ export default function Dashboard() {
                           </div>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-600 dark:text-slate-400">Customer Conversion</span>
+                          <span className="text-sm text-slate-600 dark:text-slate-300">Customer Conversion</span>
                           <div className="text-right">
                             <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
                               {businessInsights?.customers.conversion_rate.toFixed(1)}%
@@ -949,7 +949,7 @@ export default function Dashboard() {
                           </div>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-600 dark:text-slate-400">Monthly Active Users</span>
+                          <span className="text-sm text-slate-600 dark:text-slate-300">Monthly Active Users</span>
                           <div className="text-right">
                             <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
                               {businessInsights?.engagement.monthly_active_users || 0}
@@ -958,7 +958,7 @@ export default function Dashboard() {
                           </div>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-600 dark:text-slate-400">Conversations per User</span>
+                          <span className="text-sm text-slate-600 dark:text-slate-300">Conversations per User</span>
                           <div className="text-right">
                             <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
                               {businessInsights?.engagement.conversations_per_user.toFixed(1) || '0'}
@@ -974,9 +974,9 @@ export default function Dashboard() {
 
               {/* Real Recent Activity & System Health */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="bg-white dark:bg-slate-800 border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+                <Card className="bg-white dark:bg-slate-800/95 border-slate-200/60 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/20">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
                       <Activity className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                       Recent Activity
                     </CardTitle>
@@ -988,55 +988,53 @@ export default function Dashboard() {
                           <div key={i} className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
                             <div className="w-2 h-2 bg-slate-300 rounded-full mt-2"></div>
                             <div className="flex-1">
-                              <div className="h-4 w-48 bg-slate-200 dark:bg-slate-700 animate-pulse rounded mb-1"></div>
-                              <div className="h-3 w-32 bg-slate-200 dark:bg-slate-700 animate-pulse rounded mb-1"></div>
-                              <div className="h-3 w-20 bg-slate-200 dark:bg-slate-700 animate-pulse rounded"></div>
+                              <div className="h-4 w-48 bg-slate-200 dark:bg-slate-600 animate-pulse rounded mb-1"></div>
+                              <div className="h-3 w-32 bg-slate-200 dark:bg-slate-600 animate-pulse rounded mb-1"></div>
+                              <div className="h-3 w-20 bg-slate-200 dark:bg-slate-600 animate-pulse rounded"></div>
                             </div>
                           </div>
                         ))}
                       </div>
                     ) : (
                       <div className="space-y-4">
-                        <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-700/70 rounded-lg border dark:border-slate-600/50">
                           <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2"></div>
                           <div className="flex-1">
                             <div className="text-sm font-medium text-slate-900 dark:text-slate-100">New conversations today</div>
-                            <div className="text-xs text-slate-600 dark:text-slate-400">
+                            <div className="text-xs text-slate-600 dark:text-slate-300">
                               {systemHealth?.recent_activity.new_conversations || 0} new conversations in last 24 hours
                             </div>
                             <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Real-time</div>
                           </div>
                         </div>
-                        <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-700/70 rounded-lg border dark:border-slate-600/50">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
                           <div className="flex-1">
                             <div className="text-sm font-medium text-slate-900 dark:text-slate-100">New visitor registrations</div>
-                            <div className="text-xs text-slate-600 dark:text-slate-400">
+                            <div className="text-xs text-slate-600 dark:text-slate-300">
                               {systemHealth?.recent_activity.new_visitors || 0} new visitors registered
                             </div>
                             <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Last 24 hours</div>
                           </div>
                         </div>
-                        <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-700/70 rounded-lg border dark:border-slate-600/50">
                           <div className="w-2 h-2 bg-violet-500 rounded-full mt-2"></div>
                           <div className="flex-1">
-                            <div className="text-sm font-medium text-slate-900 dark:text-slate-100">Database status</div>
-                            <div className="text-xs text-slate-600 dark:text-slate-400">
-                              Database is {systemHealth?.database_status || 'operational'}
+                            <div className="text-sm font-medium text-slate-900 dark:text-slate-100">New organizations</div>
+                            <div className="text-xs text-slate-600 dark:text-slate-300">
+                              {systemHealth?.recent_activity.new_organizations || 0} businesses joined recently
                             </div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                              {systemHealth?.timestamp ? new Date(systemHealth.timestamp).toLocaleTimeString() : 'Unknown'}
-                            </div>
+                            <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">This week</div>
                           </div>
                         </div>
-                        <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-700/70 rounded-lg border dark:border-slate-600/50">
                           <div className="w-2 h-2 bg-amber-500 rounded-full mt-2"></div>
                           <div className="flex-1">
-                            <div className="text-sm font-medium text-slate-900 dark:text-slate-100">Organizations created</div>
-                            <div className="text-xs text-slate-600 dark:text-slate-400">
-                              {systemHealth?.recent_activity.new_organizations || 0} new organizations in last 24 hours
+                            <div className="text-sm font-medium text-slate-900 dark:text-slate-100">Database status</div>
+                            <div className="text-xs text-slate-600 dark:text-slate-300">
+                              System health: <span className="capitalize text-emerald-600 dark:text-emerald-400">{systemHealth?.database_status || 'checking...'}</span>
                             </div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Business growth</div>
+                            <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Live monitoring</div>
                           </div>
                         </div>
                       </div>
@@ -1044,9 +1042,9 @@ export default function Dashboard() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white dark:bg-slate-800 border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+                <Card className="bg-white dark:bg-slate-800/95 border-slate-200/60 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/20">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
                       <Clock className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                       System Status
                     </CardTitle>
@@ -1108,9 +1106,9 @@ export default function Dashboard() {
 
               {/* Real Top Performing Organizations & Usage Statistics */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <Card className="lg:col-span-2 bg-white dark:bg-slate-800 border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+                <Card className="lg:col-span-2 bg-white dark:bg-slate-800/95 border-slate-200/60 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/20">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
                       <Crown className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                       Top Performing Organizations
                     </CardTitle>
@@ -1200,9 +1198,9 @@ export default function Dashboard() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white dark:bg-slate-800 border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+                <Card className="bg-white dark:bg-slate-800 border-slate-200/60 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/20">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                    <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
                       <Database className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
                       Usage Statistics
                     </CardTitle>
@@ -1295,9 +1293,9 @@ export default function Dashboard() {
 
             {/* Organizations Tab */}
             <TabsContent value="organizations" className="space-y-6">
-              <Card>
+              <Card className="bg-white dark:bg-slate-800/95 border-slate-200/60 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
                     <Building2 className="w-5 h-5" />
                     Organizations Management
                   </CardTitle>
@@ -1377,9 +1375,9 @@ export default function Dashboard() {
 
             {/* Conversations Tab */}
             <TabsContent value="conversations" className="space-y-6">
-              <Card>
+              <Card className="bg-white dark:bg-slate-800/95 border-slate-200/60 dark:border-slate-700/60 shadow-sm dark:shadow-slate-900/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
                     <MessageSquare className="w-5 h-5" />
                     Conversation Management
                   </CardTitle>
@@ -1456,29 +1454,29 @@ export default function Dashboard() {
                         <RechartsBarChart data={[
                           {
                             name: 'Vector Embeddings',
-                            value: dashboardStats?.vector_embeddings || 1250,
-                            cost: ((dashboardStats?.vector_embeddings || 1250) * 0.0001).toFixed(2),
+                            value: dashboardStats?.vector_embeddings || 0,
+                            cost: ((dashboardStats?.vector_embeddings || 0) * 0.0001).toFixed(2),
                             color: '#3b82f6',
                             unit: 'documents'
                           },
                           {
                             name: 'OpenAI API Calls',
-                            value: realtimeStats?.api_calls || 847,
-                            cost: ((realtimeStats?.api_calls || 847) * 0.002).toFixed(2),
+                            value: realtimeStats?.api_calls || 0,
+                            cost: ((realtimeStats?.api_calls || 0) * 0.002).toFixed(2),
                             color: '#10b981',
                             unit: 'requests'
                           },
                           {
                             name: 'Database Storage',
-                            value: Math.round((dashboardStats?.total_conversations || 2500) / 10),
-                            cost: (Math.round((dashboardStats?.total_conversations || 2500) / 10) * 0.025).toFixed(2),
+                            value: Math.round((dashboardStats?.total_conversations || 0) / 10),
+                            cost: (Math.round((dashboardStats?.total_conversations || 0) / 10) * 0.025).toFixed(2),
                             color: '#8b5cf6',
                             unit: 'MB'
                           },
                           {
                             name: 'Total Conversations',
-                            value: dashboardStats?.total_conversations || 2500,
-                            cost: ((dashboardStats?.total_conversations || 2500) * 0.001).toFixed(2),
+                            value: dashboardStats?.total_conversations || 0,
+                            cost: ((dashboardStats?.total_conversations || 0) * 0.001).toFixed(2),
                             color: '#f59e0b',
                             unit: 'chats'
                           }
