@@ -27,12 +27,14 @@ import { ConversationsTab } from './components/ConversationsTab';
 import { AnalyticsTab } from './components/AnalyticsTab';
 import { SubscriptionsTab } from './components/SubscriptionsTab';
 import { OrganizationStatsPage } from './components/OrganizationStatsPage';
+import { UserStatsPage } from './components/UserStatsPage';
 import { downloadCSV, generateCSV, formatDateTime, formatCurrency } from './utils';
 
 export default function Dashboard() {
     const [activeTab, setActiveTab] = useState('overview');
     const [refreshing, setRefreshing] = useState(false);
     const [showOrgStats, setShowOrgStats] = useState(false);
+    const [showUserStats, setShowUserStats] = useState(false);
 
     // State for API data
     const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
@@ -318,6 +320,8 @@ export default function Dashboard() {
                     <TabsContent value="overview" className="space-y-4">
                         {showOrgStats ? (
                             <OrganizationStatsPage onBack={() => setShowOrgStats(false)} />
+                        ) : showUserStats ? (
+                            <UserStatsPage onBack={() => setShowUserStats(false)} />
                         ) : (
                             <OverviewTab
                                 dashboardStats={dashboardStats}
@@ -327,6 +331,7 @@ export default function Dashboard() {
                                 usageAnalytics={usageAnalytics}
                                 loading={loading}
                                 onShowOrgStats={() => setShowOrgStats(true)}
+                                onShowUserStats={() => setShowUserStats(true)}
                             />
                         )}
                     </TabsContent>

@@ -75,6 +75,7 @@ export interface Visitor {
     is_agent_mode: boolean;
     agent_takeover_at?: string;
     agent_id?: string;
+    organization_name?: string;
 }
 
 export interface Conversation {
@@ -376,6 +377,12 @@ export class AdminAPI {
     // Conversations - real data from MongoDB
     static async getAllConversations(): Promise<Conversation[]> {
         const response = await api.get('/admin/conversations');
+        return response.data;
+    }
+
+    // Visitors - real data from MongoDB
+    static async getAllVisitors(): Promise<Visitor[]> {
+        const response = await api.get('/admin/visitors');
         return response.data;
     }
 

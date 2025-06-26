@@ -53,6 +53,21 @@ export const useAdminData = () => {
         retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
     });
 
+    // Visitors data
+    const {
+        data: visitors,
+        isLoading: visitorsLoading,
+        error: visitorsError
+    } = useQuery({
+        queryKey: ['admin-visitors'],
+        queryFn: AdminAPI.getAllVisitors,
+        enabled: isAuthenticated,
+        refetchInterval: 60000, // Refetch every minute
+        staleTime: 30000,
+        retry: 3,
+        retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+    });
+
     // Subscriptions data
     const {
         data: subscriptions,
@@ -113,6 +128,11 @@ export const useAdminData = () => {
         convsLoading,
         convsError,
 
+        // Visitors
+        visitors: visitors || [],
+        visitorsLoading,
+        visitorsError,
+
         // Subscriptions
         subscriptions: subscriptions || [],
         subsLoading,
@@ -131,6 +151,7 @@ export const useAdminData = () => {
         refreshStats: () => queryClient.invalidateQueries({ queryKey: ['admin-dashboard-stats'] }),
         refreshOrganizations: () => queryClient.invalidateQueries({ queryKey: ['admin-organizations'] }),
         refreshConversations: () => queryClient.invalidateQueries({ queryKey: ['admin-conversations'] }),
+        refreshVisitors: () => queryClient.invalidateQueries({ queryKey: ['admin-visitors'] }),
         refreshSubscriptions: () => queryClient.invalidateQueries({ queryKey: ['admin-subscriptions'] }),
         refreshAnalytics: () => queryClient.invalidateQueries({ queryKey: ['admin-analytics'] })
     };
@@ -289,6 +310,80 @@ export const useConversationAnalytics = () => {
     }, [conversations]);
 
     return { ...analytics, loading: convsLoading };
+};
+
+// Custom hook for visitor statistics
+export const useVisitorStats = (fromDate?: Date, toDate?: Date) => {
+    const { visitors, visitorsLoading } = useAdminData();
+
+    const stats = useMemo(() => {
+        if (!visitors || visitors.length === 0) {
+            return {
+                totalVisitors: 0,
+                visitorGrowth: {},
+                organizationDistribution: {},
+                topActiveVisitors: []
+            };
+        }
+
+        // Filter visitors based on date range if provided
+        const filteredVisitors = visitors.filter(visitor => {
+            if (!fromDate || !toDate) return true;
+            const createdAt = new Date(visitor.created_at);
+            return createdAt >= fromDate && createdAt <= toDate;
+        });
+
+        // Calculate visitor growth by month
+        const visitorGrowthSets = filteredVisitors.reduce((acc: Record<string, Set<string>>, visitor) => {
+            const monthKey = new Date(visitor.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+            if (!acc[monthKey]) acc[monthKey] = new Set();
+            acc[monthKey].add(visitor.id);
+            return acc;
+        }, {});
+
+        // Convert Sets to counts for visitorGrowth
+        const visitorGrowth = Object.entries(visitorGrowthSets).reduce((acc: Record<string, number>, [month, visitorSet]) => {
+            acc[month] = visitorSet.size;
+            return acc;
+        }, {});
+
+        // Organization distribution by visitor count
+        const organizationDistribution = filteredVisitors.reduce((acc: Record<string, number>, visitor) => {
+            const orgName = visitor.organization_name || 'Unknown';
+            acc[orgName] = (acc[orgName] || 0) + 1;
+            return acc;
+        }, {});
+
+        // Top active visitors (based on last_active timestamp and other factors)
+        const visitorActivity = filteredVisitors.map(visitor => ({
+            id: visitor.id,
+            sessionId: visitor.session_id,
+            orgName: visitor.organization_name || 'Unknown',
+            name: visitor.name || 'Anonymous',
+            email: visitor.email || 'No email',
+            lastActive: visitor.last_active || visitor.created_at,
+            isAgentMode: visitor.is_agent_mode || false,
+            createdAt: visitor.created_at
+        }));
+
+        const topActiveVisitors = visitorActivity
+            .sort((a, b) => {
+                // Sort by last_active date (most recent first)
+                const dateA = new Date(a.lastActive);
+                const dateB = new Date(b.lastActive);
+                return dateB.getTime() - dateA.getTime();
+            })
+            .slice(0, 10);
+
+        return {
+            totalVisitors: filteredVisitors.length,
+            visitorGrowth: visitorGrowth,
+            organizationDistribution: organizationDistribution,
+            topActiveVisitors
+        };
+    }, [visitors, fromDate, toDate]);
+
+    return { ...stats, loading: visitorsLoading };
 };
 
 export default useAdminData; 

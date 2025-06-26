@@ -7,9 +7,10 @@ interface OverviewStatsCardsProps {
     dashboardStats: DashboardStats | null;
     loading: boolean;
     onShowOrgStats: () => void;
+    onShowUserStats: () => void;
 }
 
-export const OverviewStatsCards = ({ dashboardStats, loading, onShowOrgStats }: OverviewStatsCardsProps) => {
+export const OverviewStatsCards = ({ dashboardStats, loading, onShowOrgStats, onShowUserStats }: OverviewStatsCardsProps) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             <Card
@@ -37,7 +38,10 @@ export const OverviewStatsCards = ({ dashboardStats, loading, onShowOrgStats }: 
                 </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-blue-50/70 to-indigo-50/50 dark:from-slate-800/90 dark:to-slate-700/80 border-blue-100/60 dark:border-slate-600/50 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:shadow-slate-900/30">
+            <Card
+                className="bg-gradient-to-br from-blue-50/70 to-indigo-50/50 dark:from-slate-800/90 dark:to-slate-700/80 border-blue-100/60 dark:border-slate-600/50 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:shadow-slate-900/30 cursor-pointer"
+                onClick={onShowUserStats}
+            >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium text-blue-600 dark:text-blue-300">Total Users</CardTitle>
                     <div className="p-2 bg-gradient-to-br from-blue-400/80 to-indigo-500/80 dark:from-blue-500/90 dark:to-indigo-600/90 rounded-lg shadow-sm">
