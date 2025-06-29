@@ -41,56 +41,65 @@ export const OverviewTab = ({
     onShowConversationStats
 }: OverviewTabProps) => {
     return (
-        <div className="space-y-4">
-            <OverviewStatsCards
-                dashboardStats={dashboardStats}
-                loading={loading.dashboard}
-                onShowOrgStats={onShowOrgStats}
-                onShowUserStats={onShowUserStats}
-                onShowRevenueStats={onShowRevenueStats}
-                onShowConversationStats={onShowConversationStats}
-            />
-
-            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                <SystemPerformance
-                    businessInsights={businessInsights}
-                    realtimeStats={realtimeStats}
-                    loading={loading.insights}
-                />
-                <QuickActions />
-                <RevenueBreakdown
-                    businessInsights={businessInsights}
-                    loading={loading.insights}
+        <div className="flex flex-col gap-4">
+            {/* Stats Cards */}
+            <div className="w-full">
+                <OverviewStatsCards
+                    dashboardStats={dashboardStats}
+                    loading={loading.dashboard}
+                    onShowOrgStats={onShowOrgStats}
+                    onShowUserStats={onShowUserStats}
+                    onShowRevenueStats={onShowRevenueStats}
+                    onShowConversationStats={onShowConversationStats}
                 />
             </div>
 
-            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-                <GrowthMetrics
-                    businessInsights={businessInsights}
-                    loading={loading.insights}
-                />
-                <RecentActivity
-                    systemHealth={systemHealth}
-                    loading={loading.health}
-                />
+            {/* System Performance, Quick Actions, Revenue */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="w-full h-full">
+                    <SystemPerformance
+                        businessInsights={businessInsights}
+                        realtimeStats={realtimeStats}
+                        loading={loading.insights}
+                    />
+                </div>
+                <div className="w-full h-full">
+                    <QuickActions />
+                </div>
+                <div className="w-full h-full">
+                    <RevenueBreakdown
+                        businessInsights={businessInsights}
+                        loading={loading.insights}
+                    />
+                </div>
             </div>
 
-            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-                <TopPerformingOrganizations
+      
+
+            {/* Organizations and System Status */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="w-full h-full">
+                    <TopPerformingOrganizations
+                        usageAnalytics={usageAnalytics}
+                        loading={loading.usage}
+                    />
+                </div>
+                <div className="w-full h-full">
+                    <SystemStatus
+                        systemHealth={systemHealth}
+                        realtimeStats={realtimeStats}
+                        loading={loading.health}
+                    />
+                </div>
+            </div>
+
+            {/* Usage Statistics */}
+            <div className="w-full">
+                <UsageStatistics
                     usageAnalytics={usageAnalytics}
                     loading={loading.usage}
                 />
-                <SystemStatus
-                    systemHealth={systemHealth}
-                    realtimeStats={realtimeStats}
-                    loading={loading.health}
-                />
             </div>
-
-            <UsageStatistics
-                usageAnalytics={usageAnalytics}
-                loading={loading.usage}
-            />
         </div>
     );
 }; 

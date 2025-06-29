@@ -1,10 +1,10 @@
 import { Outlet, Navigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
-import Sidebar from './sidebar'
-import useIsCollapsed from '@/hooks/use-is-collapsed'
+// import Sidebar from './sidebar'
+// import useIsCollapsed from '@/hooks/use-is-collapsed'
 
 export default function AppShell() {
-  const [isCollapsed, setIsCollapsed] = useIsCollapsed()
+  // const [isCollapsed, setIsCollapsed] = useIsCollapsed()
   const { isAuthenticated, loading } = useAuth()
 
   // Show loading state while checking authentication
