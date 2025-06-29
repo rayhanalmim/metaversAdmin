@@ -19,6 +19,7 @@ import AdminAPI, {
     UsageAnalytics,
     OrganizationUsageAdmin
 } from '@/services/api';
+import DashboardCache from '@/services/cache';
 
 import { OrganizationDetails } from './components/OrganizationDetails';
 import { OverviewTab } from './components/OverviewTab';
@@ -73,6 +74,77 @@ export default function Dashboard() {
 
     const fetchAllData = async () => {
         try {
+            // Try to load data from cache first
+            const cachedDashboardStats = DashboardCache.getDashboardStats();
+            const cachedRealtimeStats = DashboardCache.getRealtimeStats();
+            const cachedOrganizations = DashboardCache.getOrganizations();
+            const cachedConversations = DashboardCache.getConversations();
+            const cachedSubscriptions = DashboardCache.getSubscriptions();
+            const cachedAnalytics = DashboardCache.getAnalytics();
+            const cachedDistribution = DashboardCache.getDistribution();
+            const cachedInsights = DashboardCache.getBusinessInsights();
+            const cachedHealth = DashboardCache.getSystemHealth();
+            const cachedUsage = DashboardCache.getUsageAnalytics();
+
+            // Log cache hits
+            console.log('Cache Status:', {
+                dashboardStats: cachedDashboardStats ? 'HIT' : 'MISS',
+                realtimeStats: cachedRealtimeStats ? 'HIT' : 'MISS',
+                organizations: cachedOrganizations ? 'HIT' : 'MISS',
+                conversations: cachedConversations ? 'HIT' : 'MISS',
+                subscriptions: cachedSubscriptions ? 'HIT' : 'MISS',
+                analytics: cachedAnalytics ? 'HIT' : 'MISS',
+                distribution: cachedDistribution ? 'HIT' : 'MISS',
+                insights: cachedInsights ? 'HIT' : 'MISS',
+                health: cachedHealth ? 'HIT' : 'MISS',
+                usage: cachedUsage ? 'HIT' : 'MISS'
+            });
+
+            // Set cached data if available
+            if (cachedDashboardStats) {
+                console.log('Using cached dashboard stats');
+                setDashboardStats(cachedDashboardStats);
+            }
+            if (cachedRealtimeStats) {
+                console.log('Using cached realtime stats');
+                setRealtimeStats(cachedRealtimeStats);
+            }
+            if (cachedOrganizations) {
+                console.log('Using cached organizations');
+                setOrganizations(cachedOrganizations);
+            }
+            if (cachedConversations) {
+                console.log('Using cached conversations');
+                setConversations(cachedConversations);
+            }
+            if (cachedSubscriptions) {
+                console.log('Using cached subscriptions');
+                setSubscriptions(cachedSubscriptions);
+            }
+            if (cachedAnalytics) {
+                console.log('Using cached analytics');
+                setAnalyticsData(cachedAnalytics);
+            }
+            if (cachedDistribution) {
+                console.log('Using cached distribution');
+                setSubscriptionDistribution(cachedDistribution);
+            }
+            if (cachedInsights) {
+                console.log('Using cached insights');
+                setBusinessInsights(cachedInsights);
+            }
+            if (cachedHealth) {
+                console.log('Using cached health data');
+                setSystemHealth(cachedHealth);
+            }
+            if (cachedUsage) {
+                console.log('Using cached usage data');
+                setUsageAnalytics(cachedUsage);
+            }
+
+            console.log('Fetching fresh data from API...');
+
+            // Fetch fresh data
             const [
                 statsData,
                 realtimeData,
@@ -97,16 +169,59 @@ export default function Dashboard() {
                 AdminAPI.getUsageAnalytics()
             ]);
 
-            if (statsData.status === 'fulfilled') setDashboardStats(statsData.value);
-            if (realtimeData.status === 'fulfilled') setRealtimeStats(realtimeData.value);
-            if (orgsData.status === 'fulfilled') setOrganizations(orgsData.value);
-            if (convsData.status === 'fulfilled') setConversations(convsData.value);
-            if (subsData.status === 'fulfilled') setSubscriptions(subsData.value);
-            if (analyticsResult.status === 'fulfilled') setAnalyticsData(analyticsResult.value);
-            if (distributionData.status === 'fulfilled') setSubscriptionDistribution(distributionData.value);
-            if (insightsData.status === 'fulfilled') setBusinessInsights(insightsData.value);
-            if (healthData.status === 'fulfilled') setSystemHealth(healthData.value);
-            if (usageData.status === 'fulfilled') setUsageAnalytics(usageData.value);
+            console.log('dashboardData', DashboardCache);
+
+            // Update state and cache with fresh data
+            if (statsData.status === 'fulfilled') {
+                console.log('Updating cache: dashboard stats');
+                setDashboardStats(statsData.value);
+                DashboardCache.setDashboardStats(statsData.value);
+            }
+            if (realtimeData.status === 'fulfilled') {
+                console.log('Updating cache: realtime stats');
+                setRealtimeStats(realtimeData.value);
+                DashboardCache.setRealtimeStats(realtimeData.value);
+            }
+            if (orgsData.status === 'fulfilled') {
+                console.log('Updating cache: organizations');
+                setOrganizations(orgsData.value);
+                DashboardCache.setOrganizations(orgsData.value);
+            }
+            if (convsData.status === 'fulfilled') {
+                console.log('Updating cache: conversations');
+                setConversations(convsData.value);
+                DashboardCache.setConversations(convsData.value);
+            }
+            if (subsData.status === 'fulfilled') {
+                console.log('Updating cache: subscriptions');
+                setSubscriptions(subsData.value);
+                DashboardCache.setSubscriptions(subsData.value);
+            }
+            if (analyticsResult.status === 'fulfilled') {
+                console.log('Updating cache: analytics');
+                setAnalyticsData(analyticsResult.value);
+                DashboardCache.setAnalytics(analyticsResult.value);
+            }
+            if (distributionData.status === 'fulfilled') {
+                console.log('Updating cache: distribution');
+                setSubscriptionDistribution(distributionData.value);
+                DashboardCache.setDistribution(distributionData.value);
+            }
+            if (insightsData.status === 'fulfilled') {
+                console.log('Updating cache: insights');
+                setBusinessInsights(insightsData.value);
+                DashboardCache.setBusinessInsights(insightsData.value);
+            }
+            if (healthData.status === 'fulfilled') {
+                console.log('Updating cache: health');
+                setSystemHealth(healthData.value);
+                DashboardCache.setSystemHealth(healthData.value);
+            }
+            if (usageData.status === 'fulfilled') {
+                console.log('Updating cache: usage');
+                setUsageAnalytics(usageData.value);
+                DashboardCache.setUsageAnalytics(usageData.value);
+            }
 
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
@@ -129,16 +244,26 @@ export default function Dashboard() {
     useEffect(() => {
         fetchAllData();
 
-        const refreshInterval = setInterval(() => {
-            Promise.allSettled([
-                AdminAPI.getRealtimeStats(),
-                AdminAPI.getSystemHealth(),
-                AdminAPI.getUsageAnalytics()
-            ]).then(([realtimeData, healthData, usageData]) => {
-                if (realtimeData.status === 'fulfilled') setRealtimeStats(realtimeData.value);
-                if (healthData.status === 'fulfilled') setSystemHealth(healthData.value);
-                if (usageData.status === 'fulfilled') setUsageAnalytics(usageData.value);
-            });
+        // Set up interval for real-time updates of specific data
+        const refreshInterval = setInterval(async () => {
+            try {
+                const [realtimeData, healthData, usageData] = await Promise.all([
+                    AdminAPI.getRealtimeStats(),
+                    AdminAPI.getSystemHealth(),
+                    AdminAPI.getUsageAnalytics()
+                ]);
+
+                setRealtimeStats(realtimeData);
+                setSystemHealth(healthData);
+                setUsageAnalytics(usageData);
+
+                // Update cache for real-time data
+                DashboardCache.setRealtimeStats(realtimeData);
+                DashboardCache.setSystemHealth(healthData);
+                DashboardCache.setUsageAnalytics(usageData);
+            } catch (error) {
+                console.error('Error updating real-time data:', error);
+            }
         }, 30000); // 30 seconds
 
         return () => clearInterval(refreshInterval);
@@ -286,11 +411,70 @@ export default function Dashboard() {
 
     return (
         <Layout>
-            <Layout.Header>
-                <Search />
-                <div className='ml-auto flex items-center space-x-4'>
-                    <ThemeSwitch />
-                    <UserNav />
+            <Layout.Header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                <div className="flex h-14 items-center justify-between w-full gap-4 px-6">
+                    {/* Left section */}
+                    <div className="flex items-center gap-4 flex-1">
+                        <Search />
+
+                    </div>
+
+                    {/* Right section */}
+                    <div className="flex items-center gap-4">
+                        {/* Notifications */}
+                        <div className="hidden md:flex items-center gap-2">
+                            <Button variant="outline" size="sm">
+                                Documentation
+                            </Button>
+                        </div>
+                        <Button variant="ghost" size="icon" className="relative">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="h-5 w-5"
+                            >
+                                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                            </svg>
+                            <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-600"></span>
+                        </Button>
+
+                        {/* Quick Actions */}
+                        <Button variant="ghost" size="icon">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="h-5 w-5"
+                            >
+                                <circle cx="12" cy="12" r="1" />
+                                <circle cx="19" cy="12" r="1" />
+                                <circle cx="5" cy="12" r="1" />
+                            </svg>
+                        </Button>
+
+                        {/* Theme Switch */}
+                        <ThemeSwitch />
+
+                        {/* Divider */}
+                        <div className="h-6 w-px bg-border"></div>
+
+                        {/* User Navigation */}
+                        <UserNav />
+                    </div>
                 </div>
             </Layout.Header>
 
