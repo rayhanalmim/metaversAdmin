@@ -294,7 +294,7 @@ export default function Dashboard() {
                 </div>
             </Layout.Header>
 
-            <Layout.Body>
+            <Layout.Body className='max-w-[2000px] mx-auto'>
                 <div className='mb-2 flex items-center justify-between space-y-2'>
                     <div className=''>
                         <h2 className='text-2xl font-bold tracking-tight'>Dashboard</h2>
