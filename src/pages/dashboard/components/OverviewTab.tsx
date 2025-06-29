@@ -24,6 +24,8 @@ interface OverviewTabProps {
     };
     onShowOrgStats: () => void;
     onShowUserStats: () => void;
+    onShowRevenueStats: () => void;
+    onShowConversationStats: () => void;
 }
 
 export const OverviewTab = ({
@@ -34,7 +36,9 @@ export const OverviewTab = ({
     usageAnalytics,
     loading,
     onShowOrgStats,
-    onShowUserStats
+    onShowUserStats,
+    onShowRevenueStats,
+    onShowConversationStats
 }: OverviewTabProps) => {
     return (
         <div className="space-y-4">
@@ -43,6 +47,8 @@ export const OverviewTab = ({
                 loading={loading.dashboard}
                 onShowOrgStats={onShowOrgStats}
                 onShowUserStats={onShowUserStats}
+                onShowRevenueStats={onShowRevenueStats}
+                onShowConversationStats={onShowConversationStats}
             />
 
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">

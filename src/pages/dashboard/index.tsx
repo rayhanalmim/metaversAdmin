@@ -28,6 +28,8 @@ import { AnalyticsTab } from './components/AnalyticsTab';
 import { SubscriptionsTab } from './components/SubscriptionsTab';
 import { OrganizationStatsPage } from './components/OrganizationStatsPage';
 import { UserStatsPage } from './components/UserStatsPage';
+import { RevenueStatsPage } from './components/RevenueStatsPage';
+import { ConversationStatsPage } from './components/ConversationStatsPage';
 import { downloadCSV, generateCSV, formatDateTime, formatCurrency } from './utils';
 
 export default function Dashboard() {
@@ -35,6 +37,8 @@ export default function Dashboard() {
     const [refreshing, setRefreshing] = useState(false);
     const [showOrgStats, setShowOrgStats] = useState(false);
     const [showUserStats, setShowUserStats] = useState(false);
+    const [showRevenueStats, setShowRevenueStats] = useState(false);
+    const [showConversationStats, setShowConversationStats] = useState(false);
 
     // State for API data
     const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
@@ -322,6 +326,10 @@ export default function Dashboard() {
                             <OrganizationStatsPage onBack={() => setShowOrgStats(false)} />
                         ) : showUserStats ? (
                             <UserStatsPage onBack={() => setShowUserStats(false)} />
+                        ) : showRevenueStats ? (
+                            <RevenueStatsPage onBack={() => setShowRevenueStats(false)} />
+                        ) : showConversationStats ? (
+                            <ConversationStatsPage onBack={() => setShowConversationStats(false)} />
                         ) : (
                             <OverviewTab
                                 dashboardStats={dashboardStats}
@@ -332,6 +340,8 @@ export default function Dashboard() {
                                 loading={loading}
                                 onShowOrgStats={() => setShowOrgStats(true)}
                                 onShowUserStats={() => setShowUserStats(true)}
+                                onShowRevenueStats={() => setShowRevenueStats(true)}
+                                onShowConversationStats={() => setShowConversationStats(true)}
                             />
                         )}
                     </TabsContent>

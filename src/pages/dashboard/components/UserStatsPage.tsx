@@ -317,33 +317,33 @@ export const UserStatsPage = ({ onBack }: UserStatsPageProps) => {
                                                         </div>
                                                         <div className="flex flex-col">
                                                             <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                                                                {visitor.name}
+                                                                {visitor.name || 'Anonymous'}
                                                             </span>
                                                             <span className="text-xs text-slate-500 dark:text-slate-400">
-                                                                {visitor.email}
+                                                                {visitor.email || 'No email'}
                                                             </span>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="p-2">
                                                     <span className="text-sm text-slate-600 dark:text-slate-400 font-mono">
-                                                        {visitor.sessionId.slice(-8)}...
+                                                        {visitor.session_id.slice(-8)}...
                                                     </span>
                                                 </td>
                                                 <td className="p-2">
-                                                    <span className="text-sm text-slate-600 dark:text-slate-400">{visitor.orgName}</span>
+                                                    <span className="text-sm text-slate-600 dark:text-slate-400">{visitor.organization_name || 'Unknown'}</span>
                                                 </td>
                                                 <td className="p-2 text-right">
                                                     <span className="text-sm text-slate-600 dark:text-slate-400">
-                                                        {new Date(visitor.lastActive).toLocaleDateString()}
+                                                        {new Date(visitor.last_active).toLocaleDateString()}
                                                     </span>
                                                 </td>
                                                 <td className="p-2 text-right">
-                                                    <span className={`inline-flex px-2 py-1 text-xs rounded-full ${visitor.isAgentMode
+                                                    <span className={`inline-flex px-2 py-1 text-xs rounded-full ${visitor.is_agent_mode
                                                         ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
                                                         : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                                                         }`}>
-                                                        {visitor.isAgentMode ? 'Agent Mode' : 'Bot Mode'}
+                                                        {visitor.is_agent_mode ? 'Agent Mode' : 'Bot Mode'}
                                                     </span>
                                                 </td>
                                             </tr>

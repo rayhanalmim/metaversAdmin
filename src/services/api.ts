@@ -319,6 +319,83 @@ export interface OrganizationUsageAdmin {
     };
 }
 
+export interface RevenueStats {
+    revenue_metrics: {
+        total_revenue: number;
+        mrr: number;
+        arr: number;
+        arpu: number;
+        active_subscriptions: number;
+        revenue_growth_rate: number;
+        average_subscription_value: number;
+    };
+    time_based_revenue: {
+        today: number;
+        this_week: number;
+        this_month: number;
+        last_month: number;
+        this_year: number;
+        last_year: number;
+    };
+    monthly_trend: Array<{
+        month: string;
+        revenue: number;
+        new_subscriptions: number;
+        churned_subscriptions: number;
+    }>;
+    tier_distribution: Array<{
+        tier: string;
+        revenue: number;
+        count: number;
+        percentage: number;
+    }>;
+    top_organizations: Array<{
+        organization_id: string;
+        organization_name: string;
+        revenue: number;
+        subscriptions: number;
+        tier: string;
+    }>;
+    timestamp: string;
+}
+
+export interface ConversationStats {
+    conversation_metrics: {
+        total_conversations: number;
+        avg_messages_per_conversation: number;
+        active_organizations: number;
+        growth_rate: number;
+    };
+    time_based_conversations: {
+        today: number;
+        this_week: number;
+        this_month: number;
+        last_month: number;
+        this_year: number;
+        last_year: number;
+    };
+    conversation_trends: Array<{
+        date: string;
+        conversations: number;
+        unique_visitors: number;
+    }>;
+    hourly_distribution: Array<{
+        hour: string;
+        conversations: number;
+    }>;
+    organization_activity: Array<{
+        organization_name: string;
+        total_conversations: number;
+        recent_conversations: number;
+    }>;
+    message_type_distribution: Array<{
+        name: string;
+        count: number;
+        percentage: number;
+    }>;
+    timestamp: string;
+}
+
 // Admin API functions
 export class AdminAPI {
     // Authentication methods
@@ -416,9 +493,21 @@ export class AdminAPI {
         return response.data;
     }
 
-    // Usage analytics - detailed real usage data from MongoDB
+    // Usage analytics - real data from MongoDB
     static async getUsageAnalytics(): Promise<UsageAnalytics> {
         const response = await api.get('/admin/usage-analytics');
+        return response.data;
+    }
+
+    // Revenue statistics - detailed revenue analytics
+    static async getRevenueStats(): Promise<RevenueStats> {
+        const response = await api.get('/admin/revenue-stats');
+        return response.data;
+    }
+
+    // Conversation statistics - detailed conversation analytics
+    static async getConversationStats(): Promise<ConversationStats> {
+        const response = await api.get('/admin/conversation-stats');
         return response.data;
     }
 

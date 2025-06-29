@@ -8,9 +8,11 @@ interface OverviewStatsCardsProps {
     loading: boolean;
     onShowOrgStats: () => void;
     onShowUserStats: () => void;
+    onShowRevenueStats: () => void;
+    onShowConversationStats: () => void;
 }
 
-export const OverviewStatsCards = ({ dashboardStats, loading, onShowOrgStats, onShowUserStats }: OverviewStatsCardsProps) => {
+export const OverviewStatsCards = ({ dashboardStats, loading, onShowOrgStats, onShowUserStats, onShowRevenueStats, onShowConversationStats }: OverviewStatsCardsProps) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             <Card
@@ -63,7 +65,10 @@ export const OverviewStatsCards = ({ dashboardStats, loading, onShowOrgStats, on
                 </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-violet-50/70 to-purple-50/50 dark:from-slate-800/90 dark:to-slate-700/80 border-violet-100/60 dark:border-slate-600/50 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:shadow-slate-900/30">
+            <Card
+                className="bg-gradient-to-br from-violet-50/70 to-purple-50/50 dark:from-slate-800/90 dark:to-slate-700/80 border-violet-100/60 dark:border-slate-600/50 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:shadow-slate-900/30 cursor-pointer"
+                onClick={onShowRevenueStats}
+            >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium text-violet-600 dark:text-violet-300">Total Revenue</CardTitle>
                     <div className="p-2 bg-gradient-to-br from-violet-400/80 to-purple-500/80 dark:from-violet-500/90 dark:to-purple-600/90 rounded-lg shadow-sm">
@@ -85,7 +90,10 @@ export const OverviewStatsCards = ({ dashboardStats, loading, onShowOrgStats, on
                 </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-cyan-50/70 to-teal-50/50 dark:from-slate-800/90 dark:to-slate-700/80 border-cyan-100/60 dark:border-slate-600/50 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:shadow-slate-900/30">
+            <Card
+                className="bg-gradient-to-br from-cyan-50/70 to-teal-50/50 dark:from-slate-800/90 dark:to-slate-700/80 border-cyan-100/60 dark:border-slate-600/50 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:shadow-slate-900/30 cursor-pointer"
+                onClick={onShowConversationStats}
+            >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium text-cyan-600 dark:text-cyan-300">Conversations</CardTitle>
                     <div className="p-2 bg-gradient-to-br from-cyan-400/80 to-teal-500/80 dark:from-cyan-500/90 dark:to-teal-600/90 rounded-lg shadow-sm">

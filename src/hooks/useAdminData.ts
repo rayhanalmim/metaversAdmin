@@ -316,74 +316,193 @@ export const useConversationAnalytics = () => {
 export const useVisitorStats = (fromDate?: Date, toDate?: Date) => {
     const { visitors, visitorsLoading } = useAdminData();
 
-    const stats = useMemo(() => {
-        if (!visitors || visitors.length === 0) {
+    return useMemo(() => {
+        if (!visitors || visitorsLoading) {
             return {
-                totalVisitors: 0,
                 visitorGrowth: {},
                 organizationDistribution: {},
-                topActiveVisitors: []
+                topActiveVisitors: [],
+                loading: visitorsLoading
             };
         }
 
-        // Filter visitors based on date range if provided
-        const filteredVisitors = visitors.filter(visitor => {
-            if (!fromDate || !toDate) return true;
-            const createdAt = new Date(visitor.created_at);
-            return createdAt >= fromDate && createdAt <= toDate;
-        });
+        // Filter visitors by date range if provided
+        let filteredVisitors = visitors;
+        if (fromDate || toDate) {
+            filteredVisitors = visitors.filter(visitor => {
+                const visitorDate = new Date(visitor.created_at);
+                if (fromDate && visitorDate < fromDate) return false;
+                if (toDate && visitorDate > toDate) return false;
+                return true;
+            });
+        }
 
-        // Calculate visitor growth by month
-        const visitorGrowthSets = filteredVisitors.reduce((acc: Record<string, Set<string>>, visitor) => {
-            const monthKey = new Date(visitor.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
-            if (!acc[monthKey]) acc[monthKey] = new Set();
-            acc[monthKey].add(visitor.id);
+        // Process visitor growth data
+        const visitorGrowth = filteredVisitors.reduce((acc, visitor) => {
+            const date = new Date(visitor.created_at);
+            const monthKey = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            acc[monthKey] = (acc[monthKey] || 0) + 1;
             return acc;
-        }, {});
+        }, {} as Record<string, number>);
 
-        // Convert Sets to counts for visitorGrowth
-        const visitorGrowth = Object.entries(visitorGrowthSets).reduce((acc: Record<string, number>, [month, visitorSet]) => {
-            acc[month] = visitorSet.size;
-            return acc;
-        }, {});
-
-        // Organization distribution by visitor count
-        const organizationDistribution = filteredVisitors.reduce((acc: Record<string, number>, visitor) => {
+        // Organization distribution
+        const organizationDistribution = filteredVisitors.reduce((acc, visitor) => {
             const orgName = visitor.organization_name || 'Unknown';
             acc[orgName] = (acc[orgName] || 0) + 1;
             return acc;
-        }, {});
+        }, {} as Record<string, number>);
 
-        // Top active visitors (based on last_active timestamp and other factors)
-        const visitorActivity = filteredVisitors.map(visitor => ({
-            id: visitor.id,
-            sessionId: visitor.session_id,
-            orgName: visitor.organization_name || 'Unknown',
-            name: visitor.name || 'Anonymous',
-            email: visitor.email || 'No email',
-            lastActive: visitor.last_active || visitor.created_at,
-            isAgentMode: visitor.is_agent_mode || false,
-            createdAt: visitor.created_at
-        }));
-
-        const topActiveVisitors = visitorActivity
-            .sort((a, b) => {
-                // Sort by last_active date (most recent first)
-                const dateA = new Date(a.lastActive);
-                const dateB = new Date(b.lastActive);
-                return dateB.getTime() - dateA.getTime();
-            })
-            .slice(0, 10);
+        // Top 10 most active visitors (by last_active date)
+        const topActiveVisitors = [...filteredVisitors]
+            .sort((a, b) => new Date(b.last_active).getTime() - new Date(a.last_active).getTime())
+            .slice(0, 10)
+            .map(visitor => ({
+                ...visitor,
+                days_since_active: Math.floor((Date.now() - new Date(visitor.last_active).getTime()) / (1000 * 60 * 60 * 24))
+            }));
 
         return {
-            totalVisitors: filteredVisitors.length,
-            visitorGrowth: visitorGrowth,
-            organizationDistribution: organizationDistribution,
-            topActiveVisitors
+            visitorGrowth,
+            organizationDistribution,
+            topActiveVisitors,
+            loading: false
         };
-    }, [visitors, fromDate, toDate]);
+    }, [visitors, visitorsLoading, fromDate, toDate]);
+};
 
-    return { ...stats, loading: visitorsLoading };
+export const useRevenueStats = (fromDate?: Date, toDate?: Date) => {
+    const { isAuthenticated } = useAuth();
+
+    const {
+        data: revenueStats,
+        isLoading,
+        error
+    } = useQuery({
+        queryKey: ['admin-revenue-stats', fromDate, toDate],
+        queryFn: AdminAPI.getRevenueStats,
+        enabled: isAuthenticated,
+        refetchInterval: 300000, // Refetch every 5 minutes
+        staleTime: 120000,
+        retry: 3,
+        retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+    });
+
+    return useMemo(() => {
+        if (!revenueStats || isLoading) {
+            return {
+                revenueMetrics: {
+                    total_revenue: 0,
+                    mrr: 0,
+                    arr: 0,
+                    arpu: 0,
+                    active_subscriptions: 0,
+                    revenue_growth_rate: 0,
+                    average_subscription_value: 0,
+                },
+                timeBasedRevenue: {
+                    today: 0,
+                    this_week: 0,
+                    this_month: 0,
+                    last_month: 0,
+                    this_year: 0,
+                    last_year: 0,
+                },
+                monthlyTrend: [],
+                tierDistribution: [],
+                topOrganizations: [],
+                loading: isLoading,
+                error
+            };
+        }
+
+        // If date filters are provided, filter monthly trend data
+        let filteredMonthlyTrend = revenueStats.monthly_trend;
+        if (fromDate || toDate) {
+            filteredMonthlyTrend = revenueStats.monthly_trend.filter(item => {
+                const itemDate = new Date(item.month + ' 1'); // Approximate date from month string
+                if (fromDate && itemDate < fromDate) return false;
+                if (toDate && itemDate > toDate) return false;
+                return true;
+            });
+        }
+
+        return {
+            revenueMetrics: revenueStats.revenue_metrics,
+            timeBasedRevenue: revenueStats.time_based_revenue,
+            monthlyTrend: filteredMonthlyTrend,
+            tierDistribution: revenueStats.tier_distribution,
+            topOrganizations: revenueStats.top_organizations,
+            loading: false,
+            error: null
+        };
+    }, [revenueStats, isLoading, error, fromDate, toDate]);
+};
+
+export const useConversationStats = (fromDate?: Date, toDate?: Date) => {
+    const { isAuthenticated } = useAuth();
+
+    const {
+        data: conversationStats,
+        isLoading,
+        error
+    } = useQuery({
+        queryKey: ['admin-conversation-stats', fromDate, toDate],
+        queryFn: AdminAPI.getConversationStats,
+        enabled: isAuthenticated,
+        refetchInterval: 180000, // Refetch every 3 minutes
+        staleTime: 60000,
+        retry: 3,
+        retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+    });
+
+    return useMemo(() => {
+        if (!conversationStats || isLoading) {
+            return {
+                conversationMetrics: {
+                    total_conversations: 0,
+                    avg_messages_per_conversation: 0,
+                    active_organizations: 0,
+                    growth_rate: 0,
+                },
+                timeBasedConversations: {
+                    today: 0,
+                    this_week: 0,
+                    this_month: 0,
+                    last_month: 0,
+                    this_year: 0,
+                    last_year: 0,
+                },
+                hourlyDistribution: [],
+                organizationActivity: [],
+                conversationTrends: [],
+                messageTypeDistribution: [],
+                loading: isLoading,
+                error
+            };
+        }
+
+        // If date filters are provided, filter trend data
+        let filteredTrends = conversationStats.conversation_trends || [];
+        if (fromDate || toDate) {
+            filteredTrends = conversationStats.conversation_trends.filter((item: { date: string }) => {
+                const itemDate = new Date(item.date);
+                if (fromDate && itemDate < fromDate) return false;
+                if (toDate && itemDate > toDate) return false;
+                return true;
+            });
+        }
+
+        return {
+            conversationMetrics: conversationStats.conversation_metrics,
+            timeBasedConversations: conversationStats.time_based_conversations,
+            hourlyDistribution: conversationStats.hourly_distribution,
+            organizationActivity: conversationStats.organization_activity,
+            conversationTrends: filteredTrends,
+            messageTypeDistribution: conversationStats.message_type_distribution,
+            loading: false,
+            error: null
+        };
+    }, [conversationStats, isLoading, error, fromDate, toDate]);
 };
 
 export default useAdminData; 
