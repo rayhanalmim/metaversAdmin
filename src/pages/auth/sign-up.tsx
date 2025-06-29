@@ -1,9 +1,5 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { UserAuthForm } from './components/user-auth-form';
-import { Bot, ArrowLeft } from 'lucide-react';
 
 export default function SignUp() {
   const navigate = useNavigate();

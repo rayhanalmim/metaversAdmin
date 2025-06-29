@@ -3,15 +3,13 @@ import { Button } from '@/components/custom/button';
 import { ArrowLeft, Calendar, DollarSign, TrendingUp, TrendingDown } from 'lucide-react';
 import { useRevenueStats } from '@/hooks/useAdminData';
 import {
+    ResponsiveContainer,
+    Bar,
     XAxis,
     YAxis,
     CartesianGrid,
     Tooltip,
     Legend,
-    ResponsiveContainer,
-    BarChart,
-    Bar,
-    LineChart,
     Line,
     PieChart,
     Pie,
@@ -33,13 +31,27 @@ interface RevenueStatsPageProps {
 // Colors for pie chart
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
 
+interface TooltipProps {
+    active?: boolean;
+    payload?: {
+        color: string;
+        name: string;
+        value: number;
+        payload: {
+            unit: string;
+            cost: string;
+        };
+    }[];
+    label?: string;
+}
+
 // Custom tooltip component
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
         return (
             <div className="bg-white dark:bg-slate-800 p-4 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg">
                 <p className="font-medium text-slate-900 dark:text-slate-100">{label}</p>
-                {payload.map((entry: any, index: number) => (
+                {payload.map((entry, index) => (
                     <p key={index} style={{ color: entry.color }} className="text-sm">
                         {`${entry.name}: ${typeof entry.value === 'number' && entry.name.toLowerCase().includes('revenue')
                             ? formatCurrency(entry.value)
@@ -219,17 +231,8 @@ export const RevenueStatsPage = ({ onBack }: RevenueStatsPageProps) => {
                             <CardContent>
                                 <ResponsiveContainer width="100%" height={300}>
                                     <PieChart>
-                                        <Pie
-                                            data={tierDistribution}
-                                            cx="50%"
-                                            cy="50%"
-                                            labelLine={false}
-                                            label={({ tier, percentage }) => `${tier}: ${percentage.toFixed(1)}%`}
-                                            outerRadius={80}
-                                            fill="#8884d8"
-                                            dataKey="revenue"
-                                        >
-                                            {tierDistribution.map((entry, index) => (
+                                        <Pie data={tierDistribution} dataKey="revenue" nameKey="tier" cx="50%" cy="50%" outerRadius={80} fill="#8884d8" label>
+                                            {tierDistribution.map((_entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
                                         </Pie>

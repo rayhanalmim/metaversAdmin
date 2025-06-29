@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/custom/button';
-import { ArrowLeft, Calendar, MessageCircle, TrendingUp, Clock, Users } from 'lucide-react';
+import { ArrowLeft, Calendar, MessageCircle, TrendingUp, Users } from 'lucide-react';
 import { useConversationStats } from '@/hooks/useAdminData';
 import {
     XAxis,
@@ -11,14 +11,8 @@ import {
     ResponsiveContainer,
     BarChart,
     Bar,
-    LineChart,
-    Line,
-    PieChart,
-    Pie,
-    Cell,
     ComposedChart,
-    AreaChart,
-    Area
+    Line,
 } from 'recharts';
 import { DateRange } from 'react-day-picker';
 import { useState } from 'react';
@@ -26,7 +20,7 @@ import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { formatNumber, formatDateTime } from '../utils';
+import { formatNumber } from '../utils';
 
 interface ConversationStatsPageProps {
     onBack: () => void;
@@ -35,13 +29,23 @@ interface ConversationStatsPageProps {
 // Colors for charts
 const COLORS = ['#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#3b82f6'];
 
+interface TooltipProps {
+    active?: boolean;
+    payload?: {
+        color: string;
+        name: string;
+        value: number;
+    }[];
+    label?: string;
+}
+
 // Custom tooltip component
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
         return (
             <div className="bg-white dark:bg-slate-800 p-4 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg">
                 <p className="font-medium text-slate-900 dark:text-slate-100">{label}</p>
-                {payload.map((entry: any, index: number) => (
+                {payload.map((entry, index) => (
                     <p key={index} style={{ color: entry.color }} className="text-sm">
                         {`${entry.name}: ${formatNumber(entry.value)}`}
                     </p>
@@ -203,7 +207,7 @@ export const ConversationStatsPage = ({ onBack }: ConversationStatsPageProps) =>
                                     <YAxis yAxisId="unique_visitors" orientation="right" />
                                     <Tooltip content={<CustomTooltip />} />
                                     <Legend />
-                                    <Area
+                                    <Bar
                                         yAxisId="conversations"
                                         type="monotone"
                                         dataKey="conversations"
@@ -249,25 +253,16 @@ export const ConversationStatsPage = ({ onBack }: ConversationStatsPageProps) =>
                                 <CardTitle>Message Type Distribution</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <PieChart>
-                                        <Pie
-                                            data={messageTypeDistribution}
-                                            cx="50%"
-                                            cy="50%"
-                                            labelLine={false}
-                                            label={({ name, percentage }) => `${name}: ${percentage.toFixed(1)}%`}
-                                            outerRadius={80}
-                                            fill="#8884d8"
-                                            dataKey="count"
-                                        >
-                                            {messageTypeDistribution.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                            ))}
-                                        </Pie>
-                                        <Tooltip formatter={(value) => formatNumber(value as number)} />
-                                    </PieChart>
-                                </ResponsiveContainer>
+                                <div className="flex flex-wrap justify-center gap-4">
+                                    {messageTypeDistribution.map((_entry, index) => (
+                                        <div key={index} className="flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-800 w-32 shadow-md">
+                                            <div className="text-2xl font-bold" style={{ color: COLORS[index % COLORS.length] }}>
+                                                {_entry.count}
+                                            </div>
+                                            <p className="text-sm text-muted-foreground mt-1">{_entry.name}</p>
+                                        </div>
+                                    ))}
+                                </div>
                             </CardContent>
                         </Card>
                     </div>

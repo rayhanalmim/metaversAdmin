@@ -98,7 +98,7 @@ export const AnalyticsTab = ({
                                     />
                                     <YAxis fontSize={12} />
                                     <Tooltip
-                                        formatter={(value, name, props) => [
+                                        formatter={(value, _name, props) => [
                                             `${Number(value).toLocaleString()} ${props.payload.unit}`,
                                             `Est. Cost: $${props.payload.cost}`
                                         ]}
