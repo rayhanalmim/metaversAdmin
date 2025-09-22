@@ -77,7 +77,9 @@ export default function Sidebar({
               ></line>
               <span className='sr-only'>Website Name</span>
             </svg>
-            
+            <div className={`text-lg font-bold ${!isCollapsed ? 'block' : 'hidden'}`}>
+              Metaverse Admin
+            </div>
           </div>
 
           {/* Toggle Button in mobile */}

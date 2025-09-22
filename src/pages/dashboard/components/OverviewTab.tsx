@@ -3,10 +3,7 @@ import { OverviewStatsCards } from './OverviewStatsCards';
 import { SystemPerformance } from './SystemPerformance';
 import { QuickActions } from './QuickActions';
 import { RevenueBreakdown } from './RevenueBreakdown';
-// import { GrowthMetrics } from './GrowthMetrics';
-// import { RecentActivity } from './RecentActivity';
 import { SystemStatus } from './SystemStatus';
-import { TopPerformingOrganizations } from './TopPerformingOrganizations';
 import { UsageStatistics } from './UsageStatistics';
 
 interface OverviewTabProps {
@@ -78,12 +75,7 @@ export const OverviewTab = ({
 
             {/* Organizations and System Status */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="w-full h-full">
-                    <TopPerformingOrganizations
-                        usageAnalytics={usageAnalytics}
-                        loading={loading.usage}
-                    />
-                </div>
+            
                 <div className="w-full h-full">
                     <SystemStatus
                         systemHealth={systemHealth}

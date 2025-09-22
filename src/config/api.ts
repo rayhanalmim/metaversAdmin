@@ -17,8 +17,12 @@ export const API_ENDPOINTS = {
     adminVerify: `${API_BASE_URL}/admin/verify`,
     adminLogin: `${API_BASE_URL}/auth/admin/login`,
 
+    // User management endpoints
+    usersWithRoles: `${API_BASE_URL}/api/admin/users-with-roles`,
+    updateUserRole: `${API_BASE_URL}/api/admin/users`,
+
     // Legacy endpoints (for backwards compatibility)
     trafficSources: `${API_BASE_URL}/api/traffic-sources`,
     notifications: `${API_BASE_URL}/api/notifications`,
     activeUsers: `${API_BASE_URL}/api/active-users`,
-} as const; 
+} as const;

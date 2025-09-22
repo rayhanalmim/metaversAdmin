@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Layout } from '@/components/custom/layout';
 import { Search } from '@/components/search';
 import ThemeSwitch from '@/components/theme-switch';
@@ -7,483 +7,316 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/custom/button';
 import { RefreshCw, Download } from 'lucide-react';
 import AdminAPI, {
-    DashboardStats,
-    RealtimeStats,
-    Organization,
-    Conversation,
-    Subscription,
-    AnalyticsData,
-    SubscriptionDistribution,
-    BusinessInsights,
-    SystemHealth,
-    UsageAnalytics,
-    OrganizationUsageAdmin
+    MetaverseDashboardStats,
+    MetaverseRealtimeStats,
+    MetaverseUser,
+    MetaverseNFT,
+    MarketplaceAnalytics,
+    UserAnalytics,
 } from '@/services/api';
-import DashboardCache from '@/services/cache';
 
-import { OrganizationDetails } from './components/OrganizationDetails';
-import { OverviewTab } from './components/OverviewTab';
-import { OrganizationsTab } from './components/OrganizationsTab';
-import { ConversationsTab } from './components/ConversationsTab';
+import { MetaverseOverviewTab } from './components/MetaverseOverviewTab';
 import { AnalyticsTab } from './components/AnalyticsTab';
-import { SubscriptionsTab } from './components/SubscriptionsTab';
-import { OrganizationStatsPage } from './components/OrganizationStatsPage';
-import { UserStatsPage } from './components/UserStatsPage';
+import { PropertyAssignmentPage } from './components/PropertyAssignmentPage';
 import { RevenueStatsPage } from './components/RevenueStatsPage';
-import { ConversationStatsPage } from './components/ConversationStatsPage';
-import { downloadCSV, generateCSV, formatDateTime, formatCurrency } from './utils';
+import { downloadCSV, generateCSV, formatDateTime } from './utils';
+import Header from './components/Header';
 
-export default function Dashboard() {
+const Dashboard: React.FC = () => {
     const [activeTab, setActiveTab] = useState('overview');
     const [refreshing, setRefreshing] = useState(false);
-    const [showOrgStats, setShowOrgStats] = useState(false);
     const [showUserStats, setShowUserStats] = useState(false);
     const [showRevenueStats, setShowRevenueStats] = useState(false);
-    const [showConversationStats, setShowConversationStats] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [authChecked, setAuthChecked] = useState(false);
+
+    console.log('📊 [DASHBOARD] Component render:', {
+        isAuthenticated,
+        authChecked,
+        activeTab
+    });
 
     // State for API data
-    const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
-    const [realtimeStats, setRealtimeStats] = useState<RealtimeStats | null>(null);
-    const [organizations, setOrganizations] = useState<Organization[]>([]);
-    const [conversations, setConversations] = useState<Conversation[]>([]);
-    const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
-    const [analyticsData, setAnalyticsData] = useState<AnalyticsData[]>([]);
-    const [subscriptionDistribution, setSubscriptionDistribution] = useState<SubscriptionDistribution[]>([]);
-    const [businessInsights, setBusinessInsights] = useState<BusinessInsights | null>(null);
-    const [systemHealth, setSystemHealth] = useState<SystemHealth | null>(null);
-    const [usageAnalytics, setUsageAnalytics] = useState<UsageAnalytics | null>(null);
+    const [dashboardStats, setDashboardStats] = useState<MetaverseDashboardStats | null>(null);
+    const [realtimeStats, setRealtimeStats] = useState<MetaverseRealtimeStats | null>(null);
+    const [users, setUsers] = useState<MetaverseUser[]>([]);
+    const [nfts, setNFTs] = useState<MetaverseNFT[]>([]);
+    const [marketplaceAnalytics, setMarketplaceAnalytics] = useState<MarketplaceAnalytics | null>(null);
+    const [userAnalytics, setUserAnalytics] = useState<UserAnalytics | null>(null);
 
     // Loading states
     const [loading, setLoading] = useState({
         dashboard: true,
         realtime: true,
-        organizations: true,
-        conversations: true,
-        subscriptions: true,
-        analytics: true,
-        distribution: true,
-        insights: true,
-        health: true,
-        usage: true
+        users: true,
+        nfts: true,
+        marketplace: true,
+        userAnalytics: true,
+        analytics: true
     });
 
-    // Organization state
-    const [selectedOrganization, setSelectedOrganization] = useState<Organization | null>(null);
-    const [organizationUsage, setOrganizationUsage] = useState<OrganizationUsageAdmin | null>(null);
-    const [loadingOrgUsage, setLoadingOrgUsage] = useState(false);
+    // Remove organization-related state as it's not needed for metaverse dashboard
+    const [selectedUser, setSelectedUser] = useState<MetaverseUser | null>(null);
 
-    const fetchAllData = async () => {
+    // Refs to prevent multiple simultaneous API calls
+    const fetchingRef = useRef(false);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Check authentication status
+    const checkAuth = useCallback(async () => {
+        console.log('📊 [DASHBOARD] Starting auth check...');
+        
         try {
-            // Try to load data from cache first
-            const cachedDashboardStats = DashboardCache.getDashboardStats();
-            const cachedRealtimeStats = DashboardCache.getRealtimeStats();
-            const cachedOrganizations = DashboardCache.getOrganizations();
-            const cachedConversations = DashboardCache.getConversations();
-            const cachedSubscriptions = DashboardCache.getSubscriptions();
-            const cachedAnalytics = DashboardCache.getAnalytics();
-            const cachedDistribution = DashboardCache.getDistribution();
-            const cachedInsights = DashboardCache.getBusinessInsights();
-            const cachedHealth = DashboardCache.getSystemHealth();
-            const cachedUsage = DashboardCache.getUsageAnalytics();
+            const isAuth = await AdminAPI.verifySession();
+            console.log('📊 [DASHBOARD] Auth check result:', isAuth);
+            
+            setIsAuthenticated(isAuth);
+            setAuthChecked(true);
+            
+            if (!isAuth) {
+                console.log('📊 [DASHBOARD] ❌ Not authenticated - will redirect');
+            } else {
+                console.log('📊 [DASHBOARD] ✅ Authenticated successfully');
+            }
+            
+            return isAuth;
+        } catch (error) {
+            console.error('📊 [DASHBOARD] ❌ Auth check failed:', error);
+            setIsAuthenticated(false);
+            setAuthChecked(true);
+            return false;
+        }
+    }, []);
 
-            // Log cache hits
-            console.log('Cache Status:', {
-                dashboardStats: cachedDashboardStats ? 'HIT' : 'MISS',
-                realtimeStats: cachedRealtimeStats ? 'HIT' : 'MISS',
-                organizations: cachedOrganizations ? 'HIT' : 'MISS',
-                conversations: cachedConversations ? 'HIT' : 'MISS',
-                subscriptions: cachedSubscriptions ? 'HIT' : 'MISS',
-                analytics: cachedAnalytics ? 'HIT' : 'MISS',
-                distribution: cachedDistribution ? 'HIT' : 'MISS',
-                insights: cachedInsights ? 'HIT' : 'MISS',
-                health: cachedHealth ? 'HIT' : 'MISS',
-                usage: cachedUsage ? 'HIT' : 'MISS'
-            });
+    const fetchAllData = useCallback(async () => {
+        // Prevent multiple simultaneous calls
+        if (fetchingRef.current || !isAuthenticated) {
+            return;
+        }
 
-            // Set cached data if available
-            if (cachedDashboardStats) {
-                console.log('Using cached dashboard stats');
-                setDashboardStats(cachedDashboardStats);
-            }
-            if (cachedRealtimeStats) {
-                console.log('Using cached realtime stats');
-                setRealtimeStats(cachedRealtimeStats);
-            }
-            if (cachedOrganizations) {
-                console.log('Using cached organizations');
-                setOrganizations(cachedOrganizations);
-            }
-            if (cachedConversations) {
-                console.log('Using cached conversations');
-                setConversations(cachedConversations);
-            }
-            if (cachedSubscriptions) {
-                console.log('Using cached subscriptions');
-                setSubscriptions(cachedSubscriptions);
-            }
-            if (cachedAnalytics) {
-                console.log('Using cached analytics');
-                setAnalyticsData(cachedAnalytics);
-            }
-            if (cachedDistribution) {
-                console.log('Using cached distribution');
-                setSubscriptionDistribution(cachedDistribution);
-            }
-            if (cachedInsights) {
-                console.log('Using cached insights');
-                setBusinessInsights(cachedInsights);
-            }
-            if (cachedHealth) {
-                console.log('Using cached health data');
-                setSystemHealth(cachedHealth);
-            }
-            if (cachedUsage) {
-                console.log('Using cached usage data');
-                setUsageAnalytics(cachedUsage);
-            }
-
-            console.log('Fetching fresh data from API...');
-
-            // Fetch fresh data
+        fetchingRef.current = true;
+        
+        try {
+            // Fetch fresh data from metaverse API endpoints
             const [
-                statsData,
-                realtimeData,
-                orgsData,
-                convsData,
-                subsData,
-                analyticsResult,
-                distributionData,
-                insightsData,
-                healthData,
-                usageData
+                dashboardResult,
+                realtimeResult,
+                usersResult,
+                nftsResult,
+                marketplaceResult,
+                userAnalyticsResult
             ] = await Promise.allSettled([
                 AdminAPI.getDashboardStats(),
                 AdminAPI.getRealtimeStats(),
-                AdminAPI.getAllOrganizations(),
-                AdminAPI.getAllConversations(),
-                AdminAPI.getAllSubscriptions(),
-                AdminAPI.getAnalytics(),
-                AdminAPI.getSubscriptionDistribution(),
-                AdminAPI.getBusinessInsights(),
-                AdminAPI.getSystemHealth(),
-                AdminAPI.getUsageAnalytics()
+                AdminAPI.getAllUsers(),
+                AdminAPI.getAllNFTs(),
+                AdminAPI.getMarketplaceAnalytics(),
+                AdminAPI.getUserAnalytics()
             ]);
 
-            console.log('dashboardData', DashboardCache);
-
-            // Update state and cache with fresh data
-            if (statsData.status === 'fulfilled') {
-                console.log('Updating cache: dashboard stats');
-                setDashboardStats(statsData.value);
-                DashboardCache.setDashboardStats(statsData.value);
+            // Update state with successful results
+            if (dashboardResult.status === 'fulfilled') {
+                setDashboardStats(dashboardResult.value);
+            } else {
+                console.error('Dashboard stats error:', dashboardResult.reason);
             }
-            if (realtimeData.status === 'fulfilled') {
-                console.log('Updating cache: realtime stats');
-                setRealtimeStats(realtimeData.value);
-                DashboardCache.setRealtimeStats(realtimeData.value);
+            
+            if (realtimeResult.status === 'fulfilled') {
+                setRealtimeStats(realtimeResult.value);
+            } else {
+                console.error('Realtime stats error:', realtimeResult.reason);
             }
-            if (orgsData.status === 'fulfilled') {
-                console.log('Updating cache: organizations');
-                setOrganizations(orgsData.value);
-                DashboardCache.setOrganizations(orgsData.value);
+            
+            if (usersResult.status === 'fulfilled') {
+                setUsers(usersResult.value);
+            } else {
+                console.error('Users fetch error:', usersResult.reason);
             }
-            if (convsData.status === 'fulfilled') {
-                console.log('Updating cache: conversations');
-                setConversations(convsData.value);
-                DashboardCache.setConversations(convsData.value);
+            
+            if (nftsResult.status === 'fulfilled') {
+                setNFTs(nftsResult.value);
+            } else {
+                console.error('NFTs fetch error:', nftsResult.reason);
             }
-            if (subsData.status === 'fulfilled') {
-                console.log('Updating cache: subscriptions');
-                setSubscriptions(subsData.value);
-                DashboardCache.setSubscriptions(subsData.value);
+            
+            if (marketplaceResult.status === 'fulfilled') {
+                setMarketplaceAnalytics(marketplaceResult.value);
+            } else {
+                console.error('Marketplace analytics error:', marketplaceResult.reason);
             }
-            if (analyticsResult.status === 'fulfilled') {
-                console.log('Updating cache: analytics');
-                setAnalyticsData(analyticsResult.value);
-                DashboardCache.setAnalytics(analyticsResult.value);
-            }
-            if (distributionData.status === 'fulfilled') {
-                console.log('Updating cache: distribution');
-                setSubscriptionDistribution(distributionData.value);
-                DashboardCache.setDistribution(distributionData.value);
-            }
-            if (insightsData.status === 'fulfilled') {
-                console.log('Updating cache: insights');
-                setBusinessInsights(insightsData.value);
-                DashboardCache.setBusinessInsights(insightsData.value);
-            }
-            if (healthData.status === 'fulfilled') {
-                console.log('Updating cache: health');
-                setSystemHealth(healthData.value);
-                DashboardCache.setSystemHealth(healthData.value);
-            }
-            if (usageData.status === 'fulfilled') {
-                console.log('Updating cache: usage');
-                setUsageAnalytics(usageData.value);
-                DashboardCache.setUsageAnalytics(usageData.value);
+            
+            if (userAnalyticsResult.status === 'fulfilled') {
+                setUserAnalytics(userAnalyticsResult.value);
+            } else {
+                console.error('User analytics error:', userAnalyticsResult.reason);
             }
 
         } catch (error) {
-            console.error('Error fetching dashboard data:', error);
+            console.error('Error fetching metaverse dashboard data:', error);
         } finally {
             setLoading({
                 dashboard: false,
                 realtime: false,
-                organizations: false,
-                conversations: false,
-                subscriptions: false,
-                analytics: false,
-                distribution: false,
-                insights: false,
-                health: false,
-                usage: false
+                users: false,
+                nfts: false,
+                marketplace: false,
+                userAnalytics: false,
+                analytics: false
             });
+            fetchingRef.current = false;
         }
-    };
-
+    }, [isAuthenticated]);
+    // Initial authentication check
     useEffect(() => {
-        fetchAllData();
+        checkAuth();
+    }, [checkAuth]);
 
-        // Set up interval for real-time updates of specific data
-        const refreshInterval = setInterval(async () => {
-            try {
-                const [realtimeData, healthData, usageData] = await Promise.all([
+    // Fetch data only after authentication is verified
+    useEffect(() => {
+        console.log('📊 [DASHBOARD] Data fetch effect:', {
+            authChecked,
+            isAuthenticated,
+            shouldFetch: authChecked && isAuthenticated
+        });
+        
+        if (authChecked && isAuthenticated) {
+            console.log('📊 [DASHBOARD] ✅ Fetching dashboard data...');
+            fetchAllData();
+        } else if (authChecked && !isAuthenticated) {
+            console.log('📊 [DASHBOARD] ❌ Not authenticated - skipping data fetch');
+        }
+    }, [authChecked, isAuthenticated, fetchAllData]);
+
+    // Set up periodic refresh for realtime data only
+    useEffect(() => {
+        if (!authChecked || !isAuthenticated) {
+            return;
+        }
+
+        // Clear any existing interval
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+        }
+
+        // Set up a more conservative refresh interval (60 seconds instead of 30)
+        intervalRef.current = setInterval(() => {
+            if (!fetchingRef.current) {
+                // Only fetch realtime stats and dashboard stats for periodic updates
+                Promise.allSettled([
                     AdminAPI.getRealtimeStats(),
-                    AdminAPI.getSystemHealth(),
-                    AdminAPI.getUsageAnalytics()
-                ]);
-
-                setRealtimeStats(realtimeData);
-                setSystemHealth(healthData);
-                setUsageAnalytics(usageData);
-
-                // Update cache for real-time data
-                DashboardCache.setRealtimeStats(realtimeData);
-                DashboardCache.setSystemHealth(healthData);
-                DashboardCache.setUsageAnalytics(usageData);
-            } catch (error) {
-                console.error('Error updating real-time data:', error);
+                    AdminAPI.getDashboardStats()
+                ]).then(([realtimeResult, dashboardResult]) => {
+                    if (realtimeResult.status === 'fulfilled') {
+                        setRealtimeStats(realtimeResult.value);
+                    }
+                    if (dashboardResult.status === 'fulfilled') {
+                        setDashboardStats(dashboardResult.value);
+                    }
+                }).catch(error => {
+                    console.error('Periodic refresh error:', error);
+                });
             }
-        }, 30000); // 30 seconds
+        }, 60000); // 60 seconds
 
-        return () => clearInterval(refreshInterval);
-    }, []);
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
+    }, [authChecked, isAuthenticated]);
 
-    const handleRefresh = async () => {
+    const handleRefresh = useCallback(async () => {
+        if (fetchingRef.current || !isAuthenticated) {
+            return;
+        }
+        
         setRefreshing(true);
         await fetchAllData();
         setRefreshing(false);
+    }, [fetchAllData, isAuthenticated]);
+
+    const handleUserClick = (user: MetaverseUser) => {
+        setSelectedUser(user);
     };
 
-    const handleOrganizationClick = async (organization: Organization) => {
-        setSelectedOrganization(organization);
-        setLoadingOrgUsage(true);
-        try {
-            const usage = await AdminAPI.getOrganizationUsageAdmin(organization.id);
-            setOrganizationUsage(usage);
-        } catch (error) {
-            console.error(`Error fetching usage for organization ${organization.id}:`, error);
-        } finally {
-            setLoadingOrgUsage(false);
-        }
-    };
-
-    const handleBackToOrganizations = () => {
-        setSelectedOrganization(null);
-        setOrganizationUsage(null);
+    const handleBackToUsers = () => {
+        setSelectedUser(null);
     };
 
     const handleExport = () => {
         let data;
         let filename;
 
-        // Prepare data structures
-        const orgData = [
-            // Header row
-            {
-                'ORGANIZATION DETAILS': '',
-                '': '',
-                'SUBSCRIPTION INFO': '',
-                ' ': '',
-                'USAGE METRICS': '',
-                '  ': ''
-            },
-            // Column headers
-            {
-                'ORGANIZATION DETAILS': 'Organization Name',
-                '': 'Organization ID',
-                'SUBSCRIPTION INFO': 'Subscription Tier',
-                ' ': 'Status',
-                'USAGE METRICS': 'Total Users',
-                '  ': 'Total Conversations'
-            },
-            // Data rows
-            ...organizations.map(org => ({
-                'ORGANIZATION DETAILS': org.name,
-                '': org.id,
-                'SUBSCRIPTION INFO': org.subscription_tier?.toUpperCase() || 'FREE',
-                ' ': org.subscription_status?.toUpperCase() || 'INACTIVE',
-                'USAGE METRICS': org.total_users || '0',
-                '  ': org.total_conversations || '0'
-            }))
-        ];
-
-        const convData = [
-            // Header row
-            {
-                'CONVERSATION DETAILS': '',
-                '': '',
-                'MESSAGE INFO': '',
-                ' ': '',
-                'TIMESTAMP': ''
-            },
-            // Column headers
-            {
-                'CONVERSATION DETAILS': 'Session ID',
-                '': 'Organization',
-                'MESSAGE INFO': 'Role',
-                ' ': 'Content',
-                'TIMESTAMP': 'Created At'
-            },
-            // Data rows
-            ...conversations.map(conv => ({
-                'CONVERSATION DETAILS': conv.session_id,
-                '': conv.organization_name || 'N/A',
-                'MESSAGE INFO': conv.role?.toUpperCase() || 'SYSTEM',
-                ' ': conv.content,
-                'TIMESTAMP': formatDateTime(conv.created_at)
-            }))
-        ];
-
-        const subData = [
-            // Header row
-            {
-                'ORGANIZATION INFO': '',
-                '': '',
-                'SUBSCRIPTION DETAILS': '',
-                ' ': '',
-                'BILLING': '',
-                '  ': ''
-            },
-            // Column headers
-            {
-                'ORGANIZATION INFO': 'Organization',
-                '': 'Status',
-                'SUBSCRIPTION DETAILS': 'Tier',
-                ' ': 'Period Start',
-                'BILLING': 'Period End',
-                '  ': 'Monthly Revenue'
-            },
-            // Data rows
-            ...subscriptions.map(sub => ({
-                'ORGANIZATION INFO': sub.organization_name || 'N/A',
-                '': sub.subscription_status?.toUpperCase() || 'INACTIVE',
-                'SUBSCRIPTION DETAILS': sub.subscription_tier?.toUpperCase() || 'FREE',
-                ' ': formatDateTime(sub.current_period_start),
-                'BILLING': formatDateTime(sub.current_period_end),
-                '  ': formatCurrency(sub.payment_amount)
-            }))
-        ];
-
+        // Export metaverse data based on active tab
         switch (activeTab) {
-            case 'organizations':
-                data = generateCSV(orgData as unknown as Record<string, unknown>[]);
-                filename = `organizations_export_${new Date().toISOString().split('T')[0]}.csv`;
+            case 'users':
+                data = users.map(user => ({
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    wallet_address: user.wallet_address,
+                    last_room: user.last_room,
+                    avatar_name: user.avatar?.name || 'N/A',
+                    last_login: formatDateTime(user.last_login_time),
+                    created_at: formatDateTime(user.created_at)
+                }));
+                filename = 'metaverse_users.csv';
                 break;
-
-            case 'conversations':
-                data = generateCSV(convData as unknown as Record<string, unknown>[]);
-                filename = `conversations_export_${new Date().toISOString().split('T')[0]}.csv`;
+            case 'nfts':
+                data = nfts.map(nft => ({
+                    id: nft.id,
+                    token_address: nft.token_address,
+                    token_id: nft.token_id,
+                    owner: nft.owner,
+                    price: nft.selling?.price || 'Not for sale',
+                    is_listed: nft.selling ? 'Yes' : 'No',
+                    created_at: new Date(nft.created_at * 1000).toISOString()
+                }));
+                filename = 'metaverse_nfts.csv';
                 break;
-
-            case 'subscriptions':
-                data = generateCSV(subData as unknown as Record<string, unknown>[]);
-                filename = `subscriptions_export_${new Date().toISOString().split('T')[0]}.csv`;
+            case 'marketplace':
+                data = marketplaceAnalytics ? [{
+                    total_volume: marketplaceAnalytics.total_volume,
+                    active_listings: marketplaceAnalytics.active_listings,
+                    total_sales: marketplaceAnalytics.total_sales || 0,
+                    average_price: marketplaceAnalytics.average_price || 0
+                }] : [];
+                filename = 'marketplace_analytics.csv';
                 break;
-
             default:
                 return;
         }
 
-        downloadCSV(data, filename);
+        const csvData = generateCSV(data);
+        downloadCSV(csvData, filename);
     };
 
+    // Show loading screen while checking authentication
+    if (!authChecked) {
+        return (
+            <Layout>
+                <Layout.Body>
+                    <div className="flex items-center justify-center h-96">
+                        <div className="text-center">
+                            <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4" />
+                            <p>Checking authentication...</p>
+                        </div>
+                    </div>
+                </Layout.Body>
+            </Layout>
+        );
+    }
 
     return (
         <Layout>
-            <Layout.Header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="flex h-14 items-center justify-between w-full gap-4 px-6">
-                    {/* Left section */}
-                    <div className="flex items-center gap-4 flex-1">
-                        <Search />
-
-                    </div>
-
-                    {/* Right section */}
-                    <div className="flex items-center gap-4">
-                        {/* Notifications */}
-                        <div className="hidden md:flex items-center gap-2">
-                            <Button variant="outline" size="sm">
-                                Documentation
-                            </Button>
-                        </div>
-                        <Button variant="ghost" size="icon" className="relative">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="h-5 w-5"
-                            >
-                                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-                                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-                            </svg>
-                            <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-600"></span>
-                        </Button>
-
-                        {/* Quick Actions */}
-                        <Button variant="ghost" size="icon">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="h-5 w-5"
-                            >
-                                <circle cx="12" cy="12" r="1" />
-                                <circle cx="19" cy="12" r="1" />
-                                <circle cx="5" cy="12" r="1" />
-                            </svg>
-                        </Button>
-
-                        {/* Theme Switch */}
-                        <ThemeSwitch />
-
-                        {/* Divider */}
-                        <div className="h-6 w-px bg-border"></div>
-
-                        {/* User Navigation */}
-                        <UserNav />
-                    </div>
-                </div>
-            </Layout.Header>
+            <Header />
 
             <Layout.Body className='max-w-[2000px] mx-auto'>
                 <div className='mb-2 flex items-center justify-between space-y-2'>
                     <div className=''>
                         <h2 className='text-2xl font-bold tracking-tight'>Dashboard</h2>
                         <p className='text-muted-foreground'>
-                            Welcome to your AI Platform Analytics Hub - Monitor usage, conversations, and business insights in real-time.
+                            Welcome to your Metaverse Analytics Hub - Monitor users, NFTs, marketplace activity, and virtual world insights in real-time.
                         </p>
                     </div>
                     <div className='flex items-center space-x-2'>
@@ -491,7 +324,7 @@ export default function Dashboard() {
                             <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
                             Refresh Data
                         </Button>
-                        <Button onClick={handleExport} disabled={!['organizations', 'conversations', 'subscriptions'].includes(activeTab)}>
+                        <Button onClick={handleExport} disabled={!['users', 'nfts', 'marketplace'].includes(activeTab)}>
                             <Download className='mr-2 h-4 w-4' />
                             Export
                         </Button>
@@ -500,75 +333,104 @@ export default function Dashboard() {
                 <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className='my-3'>
                     <TabsList className='mb-3'>
                         <TabsTrigger value="overview">Overview</TabsTrigger>
-                        <TabsTrigger value="organizations">Organizations</TabsTrigger>
-                        <TabsTrigger value="conversations">Conversations</TabsTrigger>
+                        <TabsTrigger value="users">Users</TabsTrigger>
+                        <TabsTrigger value="nfts">NFTs</TabsTrigger>
+                        <TabsTrigger value="marketplace">Marketplace</TabsTrigger>
                         <TabsTrigger value="analytics">Analytics</TabsTrigger>
-                        <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
                     </TabsList>
+                    
                     <TabsContent value="overview" className="space-y-4">
-                        {showOrgStats ? (
-                            <OrganizationStatsPage onBack={() => setShowOrgStats(false)} />
-                        ) : showUserStats ? (
+                        {showUserStats ? (
                             <UserStatsPage onBack={() => setShowUserStats(false)} />
                         ) : showRevenueStats ? (
                             <RevenueStatsPage onBack={() => setShowRevenueStats(false)} />
-                        ) : showConversationStats ? (
-                            <ConversationStatsPage onBack={() => setShowConversationStats(false)} />
                         ) : (
-                            <OverviewTab
+                            <MetaverseOverviewTab
                                 dashboardStats={dashboardStats}
                                 realtimeStats={realtimeStats}
-                                businessInsights={businessInsights}
-                                systemHealth={systemHealth}
-                                usageAnalytics={usageAnalytics}
+                                marketplaceAnalytics={marketplaceAnalytics}
+                                userAnalytics={userAnalytics}
                                 loading={loading}
-                                onShowOrgStats={() => setShowOrgStats(true)}
                                 onShowUserStats={() => setShowUserStats(true)}
                                 onShowRevenueStats={() => setShowRevenueStats(true)}
-                                onShowConversationStats={() => setShowConversationStats(true)}
                             />
                         )}
                     </TabsContent>
-                    <TabsContent value="organizations" className="space-y-4">
-                        {selectedOrganization ? (
-                            <OrganizationDetails
-                                organization={selectedOrganization}
-                                organizationUsage={organizationUsage}
-                                loading={loadingOrgUsage}
-                                onBack={handleBackToOrganizations}
-                            />
+                    <TabsContent value="users" className="space-y-4">
+                        {selectedUser ? (
+                            <PropertyAssignmentPage user={selectedUser} onBack={handleBackToUsers} />
                         ) : (
-                            <OrganizationsTab
-                                organizations={organizations}
-                                loading={loading.organizations}
-                                handleOrganizationClick={handleOrganizationClick}
-                            />
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-semibold">Metaverse Users</h3>
+                                <div className="grid gap-4">
+                                    {loading.users ? (
+                                        <div>Loading users...</div>
+                                    ) : (
+                                        users.map(user => (
+                                            <div key={user.id} className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50" 
+                                                 onClick={() => handleUserClick(user)}>
+                                                <h4 className="font-medium">{user.username}</h4>
+                                                <p className="text-sm text-gray-600">Avatar: {user.avatar_name || 'N/A'}</p>
+                                                <p className="text-sm text-gray-600">NFTs: {user.total_nfts || 0}</p>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+                            </div>
                         )}
                     </TabsContent>
-                    <TabsContent value="conversations" className="space-y-4">
-                        <ConversationsTab conversations={conversations} loading={loading.conversations} />
+                    <TabsContent value="nfts" className="space-y-4">
+                        <div className="space-y-4">
+                            <h3 className="text-lg font-semibold">NFT Collection</h3>
+                            <div className="grid gap-4">
+                                {loading.nfts ? (
+                                    <div>Loading NFTs...</div>
+                                ) : (
+                                    nfts.map(nft => (
+                                        <div key={nft.token_id} className="p-4 border rounded-lg">
+                                            <h4 className="font-medium">{nft.name}</h4>
+                                            <p className="text-sm text-gray-600">Token ID: {nft.token_id}</p>
+                                            <p className="text-sm text-gray-600">Collection: {nft.collection_name || 'N/A'}</p>
+                                            <p className="text-sm text-gray-600">Price: {nft.price || 0} ETH</p>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="marketplace" className="space-y-4">
+                        <div className="space-y-4">
+                            <h3 className="text-lg font-semibold">Marketplace Analytics</h3>
+                            {loading.marketplace ? (
+                                <div>Loading marketplace data...</div>
+                            ) : (
+                                <div className="grid gap-4">
+                                    <div className="p-4 border rounded-lg">
+                                        <h4 className="font-medium">Total Volume</h4>
+                                        <p className="text-2xl font-bold">{marketplaceAnalytics?.total_volume || 0} ETH</p>
+                                    </div>
+                                    <div className="p-4 border rounded-lg">
+                                        <h4 className="font-medium">Active Listings</h4>
+                                        <p className="text-2xl font-bold">{marketplaceAnalytics?.active_listings || 0}</p>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </TabsContent>
                     <TabsContent value="analytics" className="space-y-4">
                         <AnalyticsTab
-                            analyticsData={analyticsData}
-                            subscriptionDistribution={subscriptionDistribution}
+                            marketplaceAnalytics={marketplaceAnalytics}
+                            userAnalytics={userAnalytics}
                             loadingAnalytics={loading.analytics}
-                            loadingDistribution={loading.distribution}
                             dashboardStats={dashboardStats}
                             realtimeStats={realtimeStats}
-                            loadingInsights={loading.insights}
                         />
                     </TabsContent>
-                    <TabsContent value="subscriptions" className="space-y-4">
-                        <SubscriptionsTab
-                            subscriptions={subscriptions}
-                            loadingSubscriptions={loading.subscriptions}
-                            subscriptionDistribution={subscriptionDistribution}
-                            loadingDistribution={loading.distribution}
-                        />
-                    </TabsContent>
+              
                 </Tabs>
             </Layout.Body>
         </Layout>
     );
 }
+
+export default Dashboard;

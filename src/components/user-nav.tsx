@@ -17,9 +17,25 @@ export function UserNav() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
-  const handleLogout = () => {
-    logout()
-    navigate('/sign-in')
+  const handleLogout = async () => {
+    try {
+      console.log('🔐 UserNav: Starting logout process...')
+      await logout()
+      
+      // Clear metaverse admin session from localStorage
+      localStorage.removeItem('metaverse_admin_session')
+      console.log('🔐 UserNav: Cleared metaverse_admin_session from localStorage')
+      
+      console.log('🔐 UserNav: Logout successful, redirecting to sign-in')
+      navigate('/sign-in')
+    } catch (error) {
+      console.error('🔐 UserNav: Logout failed:', error)
+      
+      // Still clear localStorage and redirect even if logout API fails
+      localStorage.removeItem('metaverse_admin_session')
+      console.log('🔐 UserNav: Cleared metaverse_admin_session from localStorage (fallback)')
+      navigate('/sign-in')
+    }
   }
 
   // Get user initials for avatar fallback

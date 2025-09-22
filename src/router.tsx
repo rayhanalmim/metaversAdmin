@@ -45,13 +45,31 @@ const router = createBrowserRouter([
       {
         index: true,
         lazy: async () => ({
-          Component: (await import('./pages/dashboard')).default,
+          Component: (await import('./pages/dashboard/overview')).default,
         }),
       },
       {
-        path: 'subscribers',
+        path: 'users',
         lazy: async () => ({
-          Component: (await import('./pages/subscribers/index')).default,
+          Component: (await import('./pages/dashboard/users')).default,
+        }),
+      },
+      {
+        path: 'nfts',
+        lazy: async () => ({
+          Component: (await import('./pages/dashboard/nfts')).default,
+        }),
+      },
+      {
+        path: 'marketplace',
+        lazy: async () => ({
+          Component: (await import('./pages/dashboard/marketplace')).default,
+        }),
+      },
+      {
+        path: 'analytics',
+        lazy: async () => ({
+          Component: (await import('./pages/dashboard/analytics')).default,
         }),
       },
     ],
