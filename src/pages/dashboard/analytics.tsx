@@ -3,23 +3,23 @@ import { Layout } from '@/components/custom/layout';
 import { Button } from '@/components/custom/button';
 import { RefreshCw } from 'lucide-react';
 import AdminAPI, {
-    MarketplaceAnalytics,
-    UserAnalytics,
+    // MarketplaceAnalytics,
+    // UserAnalytics,
 } from '@/services/api';
-import { AnalyticsTab } from './components/AnalyticsTab';
+// import { AnalyticsTab } from './components/AnalyticsTab';
 import Header from './components/Header';
 
 const AnalyticsPage: React.FC = () => {
     const [refreshing, setRefreshing] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [authChecked, setAuthChecked] = useState(false);
-    const [marketplaceAnalytics, setMarketplaceAnalytics] = useState<MarketplaceAnalytics | null>(null);
-    const [userAnalytics, setUserAnalytics] = useState<UserAnalytics | null>(null);
-    const [loading, setLoading] = useState({
-        marketplace: true,
-        userAnalytics: true,
-        analytics: true
-    });
+    // const [marketplaceAnalytics, setMarketplaceAnalytics] = useState<MarketplaceAnalytics | null>(null);
+    // const [userAnalytics, setUserAnalytics] = useState<UserAnalytics | null>(null);
+    // const [loading, setLoading] = useState({
+    //     marketplace: true,
+    //     userAnalytics: true,
+    //     analytics: true
+    // });
 
     const fetchingRef = useRef(false);
 
@@ -55,13 +55,13 @@ const AnalyticsPage: React.FC = () => {
             ]);
 
             if (marketplaceResult.status === 'fulfilled') {
-                setMarketplaceAnalytics(marketplaceResult.value);
+                // setMarketplaceAnalytics(marketplaceResult.value);
             } else {
                 console.error('Marketplace analytics error:', marketplaceResult.reason);
             }
             
             if (userAnalyticsResult.status === 'fulfilled') {
-                setUserAnalytics(userAnalyticsResult.value);
+                // setUserAnalytics(userAnalyticsResult.value);
             } else {
                 console.error('User analytics error:', userAnalyticsResult.reason);
             }
@@ -69,11 +69,11 @@ const AnalyticsPage: React.FC = () => {
         } catch (error) {
             console.error('Error fetching analytics data:', error);
         } finally {
-            setLoading({
-                marketplace: false,
-                userAnalytics: false,
-                analytics: false
-            });
+            // setLoading({
+            //     marketplace: false,
+            //     userAnalytics: false,
+            //     analytics: false
+            // });
             fetchingRef.current = false;
         }
     }, [isAuthenticated]);
@@ -136,11 +136,11 @@ const AnalyticsPage: React.FC = () => {
                 </div>
                 
                 <div className="space-y-4">
-                    <AnalyticsTab
+                    {/* <AnalyticsTab
                         marketplaceAnalytics={marketplaceAnalytics}
                         userAnalytics={userAnalytics}
                         loading={loading}
-                    />
+                    /> */}
                 </div>
             </Layout.Body>
         </Layout>

@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import router from '@/router';
 import { ThemeColorProvider } from './context/ThemeColorContext';
 import { UserProvider } from './context/UserContext';
-import { AuthProvider } from '@/context/AuthContext'
 
 // Create a client
 const queryClient = new QueryClient({
@@ -21,7 +20,6 @@ const queryClient = new QueryClient({
 export default function App() {
     return (
         <QueryClientProvider client={queryClient}>
-            <AuthProvider>
                 <React.StrictMode>
                     <UserProvider>
                         <ThemeColorProvider>
@@ -32,7 +30,6 @@ export default function App() {
                         </ThemeColorProvider>
                     </UserProvider>
                 </React.StrictMode>
-            </AuthProvider>
         </QueryClientProvider>
     );
 } 

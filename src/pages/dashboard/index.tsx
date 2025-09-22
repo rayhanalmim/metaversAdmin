@@ -1,8 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Layout } from '@/components/custom/layout';
-import { Search } from '@/components/search';
-import ThemeSwitch from '@/components/theme-switch';
-import { UserNav } from '@/components/user-nav';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/custom/button';
 import { RefreshCw, Download } from 'lucide-react';
@@ -16,11 +13,10 @@ import AdminAPI, {
 } from '@/services/api';
 
 import { MetaverseOverviewTab } from './components/MetaverseOverviewTab';
-import { AnalyticsTab } from './components/AnalyticsTab';
 import { PropertyAssignmentPage } from './components/PropertyAssignmentPage';
 import { RevenueStatsPage } from './components/RevenueStatsPage';
-import { downloadCSV, generateCSV, formatDateTime } from './utils';
 import Header from './components/Header';
+import { UserStatsPage } from './components/UserStatsPage';
 
 const Dashboard: React.FC = () => {
     const [activeTab, setActiveTab] = useState('overview');
@@ -244,51 +240,50 @@ const Dashboard: React.FC = () => {
     };
 
     const handleExport = () => {
-        let data;
-        let filename;
+        // let data;
+        // let filename;
 
-        // Export metaverse data based on active tab
-        switch (activeTab) {
-            case 'users':
-                data = users.map(user => ({
-                    id: user.id,
-                    username: user.username,
-                    email: user.email,
-                    wallet_address: user.wallet_address,
-                    last_room: user.last_room,
-                    avatar_name: user.avatar?.name || 'N/A',
-                    last_login: formatDateTime(user.last_login_time),
-                    created_at: formatDateTime(user.created_at)
-                }));
-                filename = 'metaverse_users.csv';
-                break;
-            case 'nfts':
-                data = nfts.map(nft => ({
-                    id: nft.id,
-                    token_address: nft.token_address,
-                    token_id: nft.token_id,
-                    owner: nft.owner,
-                    price: nft.selling?.price || 'Not for sale',
-                    is_listed: nft.selling ? 'Yes' : 'No',
-                    created_at: new Date(nft.created_at * 1000).toISOString()
-                }));
-                filename = 'metaverse_nfts.csv';
-                break;
-            case 'marketplace':
-                data = marketplaceAnalytics ? [{
-                    total_volume: marketplaceAnalytics.total_volume,
-                    active_listings: marketplaceAnalytics.active_listings,
-                    total_sales: marketplaceAnalytics.total_sales || 0,
-                    average_price: marketplaceAnalytics.average_price || 0
-                }] : [];
-                filename = 'marketplace_analytics.csv';
-                break;
-            default:
-                return;
-        }
+        // // Export metaverse data based on active tab
+        // switch (activeTab) {
+        //     case 'users':
+        //         data = users.map(user => ({
+        //             id: user.id,
+        //             username: user.username,
+        //             email: user.email,
+        //             wallet_address: user.wallet_address,
+        //             last_room: user.last_room,
+        //             avatar_name: user.avatar?.name || 'N/A',
+        //             last_login: formatDateTime(user.last_login_time),
+        //             created_at: formatDateTime(user.created_at)
+        //         }));
+        //         filename = 'metaverse_users.csv';
+        //         break;
+        //     case 'nfts':
+        //         data = nfts.map(nft => ({
+        //             id: nft.id,
+        //             token_address: nft.token_address,
+        //             token_id: nft.token_id,
+        //             owner: nft.owner,
+        //             price: nft.selling?.price || 'Not for sale',
+        //             is_listed: nft.selling ? 'Yes' : 'No',
+        //             created_at: new Date(nft.created_at * 1000).toISOString()
+        //         }));
+        //         filename = 'metaverse_nfts.csv';
+        //         break;
+        //     case 'marketplace':
+        //         data = marketplaceAnalytics ? [{
+        //             totalVolume: marketplaceAnalytics.totalVolume,
+        //             activeListings: marketplaceAnalytics.activeListings,
+        //             averagePrice: marketplaceAnalytics.averagePrice || 0
+        //         }] : [];
+        //         filename = 'marketplace_analytics.csv';
+        //         break;
+        //     default:
+        //         return;
+        // }
 
-        const csvData = generateCSV(data);
-        downloadCSV(csvData, filename);
+        // const csvData = generateCSV(data);
+        // downloadCSV(csvData, filename);
     };
 
     // Show loading screen while checking authentication
@@ -370,7 +365,6 @@ const Dashboard: React.FC = () => {
                                             <div key={user.id} className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50" 
                                                  onClick={() => handleUserClick(user)}>
                                                 <h4 className="font-medium">{user.username}</h4>
-                                                <p className="text-sm text-gray-600">Avatar: {user.avatar_name || 'N/A'}</p>
                                                 <p className="text-sm text-gray-600">NFTs: {user.total_nfts || 0}</p>
                                             </div>
                                         ))
@@ -388,10 +382,7 @@ const Dashboard: React.FC = () => {
                                 ) : (
                                     nfts.map(nft => (
                                         <div key={nft.token_id} className="p-4 border rounded-lg">
-                                            <h4 className="font-medium">{nft.name}</h4>
                                             <p className="text-sm text-gray-600">Token ID: {nft.token_id}</p>
-                                            <p className="text-sm text-gray-600">Collection: {nft.collection_name || 'N/A'}</p>
-                                            <p className="text-sm text-gray-600">Price: {nft.price || 0} ETH</p>
                                         </div>
                                     ))
                                 )}
@@ -407,24 +398,22 @@ const Dashboard: React.FC = () => {
                                 <div className="grid gap-4">
                                     <div className="p-4 border rounded-lg">
                                         <h4 className="font-medium">Total Volume</h4>
-                                        <p className="text-2xl font-bold">{marketplaceAnalytics?.total_volume || 0} ETH</p>
                                     </div>
                                     <div className="p-4 border rounded-lg">
                                         <h4 className="font-medium">Active Listings</h4>
-                                        <p className="text-2xl font-bold">{marketplaceAnalytics?.active_listings || 0}</p>
                                     </div>
                                 </div>
                             )}
                         </div>
                     </TabsContent>
                     <TabsContent value="analytics" className="space-y-4">
-                        <AnalyticsTab
+                        {/* <AnalyticsTab
                             marketplaceAnalytics={marketplaceAnalytics}
                             userAnalytics={userAnalytics}
                             loadingAnalytics={loading.analytics}
                             dashboardStats={dashboardStats}
                             realtimeStats={realtimeStats}
-                        />
+                        /> */}
                     </TabsContent>
               
                 </Tabs>

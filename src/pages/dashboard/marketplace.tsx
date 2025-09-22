@@ -3,7 +3,6 @@ import { Layout } from '@/components/custom/layout';
 import { Button } from '@/components/custom/button';
 import { RefreshCw, Download } from 'lucide-react';
 import AdminAPI, { MarketplaceAnalytics } from '@/services/api';
-import { downloadCSV, generateCSV } from './utils';
 import Header from './components/Header';
 
 const MarketplacePage: React.FC = () => {
@@ -72,17 +71,17 @@ const MarketplacePage: React.FC = () => {
     }, [fetchMarketplaceData, isAuthenticated]);
 
     const handleExport = () => {
-        if (!marketplaceAnalytics) return;
+        // if (!marketplaceAnalytics) return;
         
-        const data = [{
-            total_volume: marketplaceAnalytics.total_volume,
-            active_listings: marketplaceAnalytics.active_listings,
-            total_sales: marketplaceAnalytics.total_sales || 0,
-            average_price: marketplaceAnalytics.average_price || 0
-        }];
+        // const data = [{
+        //     total_volume: marketplaceAnalytics.total_volume,
+        //     active_listings: marketplaceAnalytics.active_listings,
+        //     total_sales: marketplaceAnalytics.total_sales || 0,
+        //     average_price: marketplaceAnalytics.average_price || 0
+        // }];
         
-        const csvData = generateCSV(data);
-        downloadCSV(csvData, 'marketplace_analytics.csv');
+        // const csvData = generateCSV(data);
+        // downloadCSV(csvData, 'marketplace_analytics.csv');
     };
 
     // Show loading screen while checking authentication
@@ -136,24 +135,7 @@ const MarketplacePage: React.FC = () => {
                             <p className="text-muted-foreground">No marketplace data available</p>
                         </div>
                     ) : (
-                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                            <div className="p-4 border rounded-lg">
-                                <h4 className="font-medium text-sm text-muted-foreground">Total Volume</h4>
-                                <p className="text-2xl font-bold">{marketplaceAnalytics.total_volume} ETH</p>
-                            </div>
-                            <div className="p-4 border rounded-lg">
-                                <h4 className="font-medium text-sm text-muted-foreground">Active Listings</h4>
-                                <p className="text-2xl font-bold">{marketplaceAnalytics.active_listings}</p>
-                            </div>
-                            <div className="p-4 border rounded-lg">
-                                <h4 className="font-medium text-sm text-muted-foreground">Total Sales</h4>
-                                <p className="text-2xl font-bold">{marketplaceAnalytics.total_sales || 0}</p>
-                            </div>
-                            <div className="p-4 border rounded-lg">
-                                <h4 className="font-medium text-sm text-muted-foreground">Average Price</h4>
-                                <p className="text-2xl font-bold">{marketplaceAnalytics.average_price || 0} ETH</p>
-                            </div>
-                        </div>
+                        <div></div>
                     )}
                 </div>
             </Layout.Body>

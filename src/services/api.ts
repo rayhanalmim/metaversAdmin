@@ -48,6 +48,9 @@ export interface MetaverseRealtimeStats {
 }
 
 export interface MetaverseUser {
+    is_admin: boolean;
+    name: string;
+    role: string;
     id: number;
     username: string;
     email: string;
@@ -73,11 +76,13 @@ export interface MetaverseUser {
 }
 
 export interface MetaverseNFT {
+    collection_name: string;
+    name: string;
     id: number;
     token_address: string;
     token_id: string;
     owner: string;
-    metadata: any;
+    metadata: unknown;
     created_at: number;
     selling?: {
         price: string;
@@ -121,7 +126,7 @@ export interface Property {
     token_id: number;
     chain_id: string;
     token_uri: string;
-    metadata: any;
+    metadata: unknown;
     owner: string;
     is_sync_metadata: boolean;
     created_at: number;
@@ -145,11 +150,13 @@ export interface PropertyAssignmentResponse {
 }
 
 export interface LoginCredentials {
-    username: string;
+    email: string;
     password: string;
 }
 
 export interface LoginResponse {
+    user: MetaverseUser;
+    access_token: string;
     success: boolean;
     message: string;
     data?: {
@@ -283,35 +290,35 @@ export class AdminAPI {
     }
 
     // Legacy methods for compatibility (return empty data)
-    static async getAllOrganizations(): Promise<any[]> {
+    static async getAllOrganizations(): Promise<unknown[]> {
         return [];
     }
 
-    static async getAllConversations(): Promise<any[]> {
+    static async getAllConversations(): Promise<unknown[]> {
         return [];
     }
 
-    static async getAllSubscriptions(): Promise<any[]> {
+    static async getAllSubscriptions(): Promise<unknown[]> {
         return [];
     }
 
-    static async getAnalytics(): Promise<any[]> {
+    static async getAnalytics(): Promise<unknown[]> {
         return [];
     }
 
-    static async getSubscriptionDistribution(): Promise<any[]> {
+    static async getSubscriptionDistribution(): Promise<unknown[]> {
         return [];
     }
 
-    static async getBusinessInsights(): Promise<any> {
+    static async getBusinessInsights(): Promise<unknown> {
         return null;
     }
 
-    static async getSystemHealth(): Promise<any> {
+    static async getSystemHealth(): Promise<unknown> {
         return null;
     }
 
-    static async getUsageAnalytics(): Promise<any> {
+    static async getUsageAnalytics(): Promise<unknown> {
         return null;
     }
 }
@@ -321,12 +328,12 @@ export default AdminAPI;
 // Export types for backward compatibility
 export type DashboardStats = MetaverseDashboardStats;
 export type RealtimeStats = MetaverseRealtimeStats;
-export type Organization = any;
-export type Conversation = any;
-export type Subscription = any;
-export type AnalyticsData = any;
-export type SubscriptionDistribution = any;
-export type BusinessInsights = any;
-export type SystemHealth = any;
-export type UsageAnalytics = any;
-export type OrganizationUsageAdmin = any;
+export type Organization = unknown;
+export type Conversation = unknown;
+export type Subscription = unknown;
+export type AnalyticsData = unknown;
+export type SubscriptionDistribution = unknown;
+export type BusinessInsights = unknown;
+export type SystemHealth = unknown;
+export type UsageAnalytics = unknown;
+export type OrganizationUsageAdmin = unknown;

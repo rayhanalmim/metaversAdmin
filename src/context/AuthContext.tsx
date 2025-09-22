@@ -2,7 +2,7 @@ import { createContext, useContext, ReactNode, useState, useEffect } from 'react
 import AdminAPI from '@/services/api';
 
 interface AdminUser {
-    id: string;
+    id: number;
     email: string;
     name: string;
     role: string;
@@ -108,32 +108,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
-    const googleSignIn = async (): Promise<boolean> => {
-        try {
-            console.log('🔐 AuthProvider: Starting Google sign-in');
-            setLoading(true);
-            const response = await AdminAPI.googleAuth();
-
-            if (response.access_token && response.user) {
-                // Check if user is admin
-                if (!response.user.is_admin || response.user.role !== 'admin') {
-                    throw new Error('Admin access required');
-                }
-
-                localStorage.setItem('adminToken', response.access_token);
-                localStorage.setItem('adminUser', JSON.stringify(response.user));
-                AdminAPI.setToken(response.access_token);
-                setUser(response.user);
-                return true;
-            }
-            return false;
-        } catch (error) {
-            console.error('🔐 AuthProvider: Google sign-in failed:', error);
-            return false;
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const logout = () => {
         console.log('🔐 AuthProvider: Logging out');
@@ -147,7 +121,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         isAuthenticated: !!user,
         login,
-        googleSignIn,
         logout,
         loading
     };
@@ -155,7 +128,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     console.log('🔐 AuthProvider: Current state - authenticated:', !!user, 'loading:', loading);
 
     return (
-        <AuthContext.Provider value={value}>
+        <AuthContext.Provider value={{...value, googleSignIn: async () => false}}>
             {children}
         </AuthContext.Provider>
     );

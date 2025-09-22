@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AdminAPI } from '@/services/api';
+import AdminAPI from '@/services/api';
 import { 
     Users, 
     Wallet, 
@@ -11,7 +10,6 @@ import {
     Trophy, 
     Activity, 
     TrendingUp,
-    Eye,
     RefreshCw
 } from 'lucide-react';
 import { SidebarNav } from '@/components/SidebarNav';
@@ -19,13 +17,21 @@ import { Layout } from '@/components/custom/layout';
 import { Search } from '@/components/search';
 import ThemeSwitch from '@/components/theme-switch';
 import { UserNav } from '@/components/user-nav';
+import { Button } from '@/components/custom/button';
 
 interface DashboardStats {
     totalUsers: number;
     totalWallets: number;
     totalItems: number;
     totalNFTs: number;
-    recentActivity: any[];
+    recentActivity: {
+        description: string;
+        timestamp: string;
+        event: string;
+        user: string;
+        item?: string;
+        nft?: string;
+    }[];
 }
 
 const MetaverseDashboard: React.FC = () => {
@@ -43,12 +49,14 @@ const MetaverseDashboard: React.FC = () => {
         try {
             setLoading(true);
             setError(null);
-            const data = await AdminAPI.getDashboard();
-            if (data.success) {
-                setStats(data.data);
-            } else {
-                setError('Failed to load dashboard data');
-            }
+            const data = await AdminAPI.getDashboardStats();
+            setStats({
+                totalUsers: data.totalUsers,
+                totalWallets: data.totalWallets,
+                totalItems: data.totalItems,
+                totalNFTs: data.totalNFTs,
+                recentActivity: []
+            });
         } catch (err) {
             console.error('Dashboard fetch error:', err);
             setError('Error loading dashboard data');

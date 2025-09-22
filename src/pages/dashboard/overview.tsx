@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Layout } from '@/components/custom/layout';
 import { Button } from '@/components/custom/button';
-import { RefreshCw, Download } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import AdminAPI, {
     MetaverseDashboardStats,
     MetaverseRealtimeStats,
@@ -12,9 +12,6 @@ import AdminAPI, {
 import { MetaverseOverviewTab } from './components/MetaverseOverviewTab';
 import { UserStatsPage } from './components/UserStatsPage';
 import { RevenueStatsPage } from './components/RevenueStatsPage';
-import { Search } from '@/components/search';
-import ThemeSwitch from '@/components/theme-switch';
-import { UserNav } from '@/components/user-nav';
 import Header from './components/Header';
 
 const OverviewPage: React.FC = () => {
