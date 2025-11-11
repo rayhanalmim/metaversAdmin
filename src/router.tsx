@@ -72,6 +72,12 @@ const router = createBrowserRouter([
           Component: (await import('./pages/dashboard/analytics')).default,
         }),
       },
+      {
+        path: 'livestream',
+        lazy: async () => ({
+          Component: (await import('./pages/dashboard/livestream')).default,
+        }),
+      },
     ],
   },
 

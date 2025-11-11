@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 
 // Base API configuration
@@ -138,6 +139,44 @@ export interface Property {
     rent_due_at?: number;
     grace_until?: number;
     rental_status?: 'listed' | 'active' | 'late' | 'evicted' | 'ended';
+}
+
+export interface LiveStream {
+    id: number;
+    title: string;
+    youtube_url: string;
+    description: string | null;
+    is_active: boolean;
+    created_by: number;
+    view_count: number;
+    created_at: string;
+    updated_at: string;
+    creator?: {
+        id: number;
+        username: string;
+        email: string;
+    };
+}
+
+export interface LiveStreamStats {
+    totalStreams: number;
+    activeStreams: number;
+    totalViews: number;
+    recentStreams: LiveStream[];
+}
+
+export interface CreateLiveStreamRequest {
+    title: string;
+    youtube_url: string;
+    description?: string;
+    is_active?: boolean;
+}
+
+export interface UpdateLiveStreamRequest {
+    title?: string;
+    youtube_url?: string;
+    description?: string;
+    is_active?: boolean;
 }
 
 export interface PropertyAssignmentResponse {
@@ -286,6 +325,56 @@ export class AdminAPI {
 
     static async searchProperties(query: string): Promise<Property[]> {
         const response = await api.get(`/api/admin/properties/search?q=${encodeURIComponent(query)}`);
+        return response.data.data;
+    }
+
+    // Live Stream management methods
+    static async getAllLiveStreams(page: number = 1, limit: number = 10, search: string = '', is_active?: boolean): Promise<{streams: LiveStream[], pagination: any}> {
+        const params = new URLSearchParams({
+            page: page.toString(),
+            limit: limit.toString(),
+            search
+        });
+        
+        if (is_active !== undefined) {
+            params.append('is_active', is_active.toString());
+        }
+        
+        const response = await api.get(`/api/admin/livestreams?${params}`);
+        return response.data.data;
+    }
+
+    static async getLiveStreamStats(): Promise<LiveStreamStats> {
+        const response = await api.get('/api/admin/livestreams/stats');
+        return response.data.data;
+    }
+
+    static async getLiveStreamById(id: number): Promise<LiveStream> {
+        const response = await api.get(`/api/admin/livestreams/${id}`);
+        return response.data.data;
+    }
+
+    static async createLiveStream(data: CreateLiveStreamRequest): Promise<LiveStream> {
+        const response = await api.post('/api/admin/livestreams', data);
+        return response.data.data;
+    }
+
+    static async updateLiveStream(id: number, data: UpdateLiveStreamRequest): Promise<LiveStream> {
+        const response = await api.put(`/api/admin/livestreams/${id}`, data);
+        return response.data.data;
+    }
+
+    static async deleteLiveStream(id: number): Promise<void> {
+        await api.delete(`/api/admin/livestreams/${id}`);
+    }
+
+    static async toggleLiveStream(id: number): Promise<LiveStream> {
+        const response = await api.patch(`/api/admin/livestreams/${id}/toggle`);
+        return response.data.data;
+    }
+
+    static async getActiveLiveStream(): Promise<LiveStream> {
+        const response = await api.get('/api/livestream/active');
         return response.data.data;
     }
 
