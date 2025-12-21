@@ -74,6 +74,40 @@ const Township_ara_left = [
     [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 271, 272, null, 271, 34, null, null, null, null],
 ];
 
+const Township_ara_right = [
+    [107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [136, 135, 134, 133, 132, 131, 130, 129, 128, 127, 126, 125, 124, 4, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [184, 183, 182, 181, 180, 179, 178, 177, 176, 175, 174, 173, 172, 8, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [280, 279, null, 278, 38, null, 287, null,null, 42, null, 293, null,null, 48, null, 631, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [276, null, null, null, 277, null, 285, null,null, 286, null, 291, null,null, 292, null, 629, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [36, null, null, null, 37, null, 40, null, null, 41, null, 44, null,null, 45, null, 632, 633, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [284, 283, 282, 281, 39, null, 290, 289, 288, 43, null, 296, 295, 294, 47, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [579, 578, 577, 576, 575, 574, 573, 572, 571, 570, 569, 568, 567, 566, 65, null, 595, 35, 274, 275, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 594, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [501, 500, null, 299, 50, null, 508, null,null, 54, null, 514, null,null, 58, null, 593, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [297, null, null, null, 298, null, 506, null, null, 507, null, 512, null, null,513, null,  592, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [48, null, null, null, 49, null, 52, null,null, 53, null, 56, null,null, 57, null, 591, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [505, 504, 503, 502, 51, null, 511, 510, 509, 55, null, 582, 581, 580, 66, null,590 , null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 68, 620, 619, 73, null, null, null, null, null, null, null, null, null, null],
+    [589, 520, 519, 518, 517, 516, 515, 59, null, null, 524, 523, 522, 521, 60, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    
+    
+    [588, null, null, null, null, null, null, null, null, null, null, null, null, null, 598, null, null, null, null, null, null, null, null, null, null, null, null],
+    [587, null, null, null, null, null, null, null, null, null, null, null, null, null, 597, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [586, null, null, null, null, null, null, null, null, null, null, null, null, null, 596, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [585, null, null, null, null, null, null, null, null, null, null, null, null, null, 99, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [584, null, null, null, null, null, null, null, null, null, null, null, null, null, 601, 600, 599, 70, null, null, null, null, null, null, null, null, null, null, null, null],
+    [583, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 602, null, null, null, null, 623, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 71, null, null, null, null, 622, null, null, null, null, null, null, null],
+    [67, 618, 617, 616, 615, 614, 613, 612, 611, 610, 609, 608, 607, 606, 605, 604, 603, 72, null, null, null, null, 621, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 74, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 75, 624, 625, 626, 627, 628, null, null],
+    [671, 670, 669, 668, 667, 666, 665, 79, 676, 675, 674, 673, 672, 80, 81, 677, 678, 679, 680, 681, null, null, null, null, null, null, null, null, null],
+];
+
 export const PropertyMapView: React.FC<PropertyMapViewProps> = ({
     users,
     properties,
@@ -539,8 +573,46 @@ const TownshipAreaMap: React.FC<{
                 )}
 
                 {subTab === 'right' && (
-                    <div className="text-center py-12 text-muted-foreground">
-                        Township Right Side coming soon...
+                    <div className="flex flex-col items-start gap-4 w-max mx-auto">
+                        <div className="flex gap-4 items-center w-max">
+                            {/* Main Middle Road Indicator - Left Side */}
+                            <div className="relative flex items-center">
+                                <div className="absolute right-0 bg-gray-300 dark:bg-gray-600 tracking-wider px-4 py-1 rounded text-xs font-bold text-white shadow-sm transform rotate-90 whitespace-nowrap origin-center">
+                                    main road
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-inner">
+                                <div className='flex justify-center pb-4'>
+                                    <div className="bg-gray-300 dark:bg-gray-600 px-8 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm">
+                                        bridge to township
+                                    </div>
+                                </div>
+                                {Township_ara_right.map((row, rowIndex) => (
+                                    <React.Fragment key={rowIndex}>
+                                        <div className="flex items-center gap-0.5">
+                                            {row.map((propertyId, colIndex) => (
+                                                <React.Fragment key={colIndex}>
+                                                    {propertyId !== null ? (
+                                                        <PropertyBox
+                                                            propertyId={propertyId}
+                                                        />
+                                                    ) : (
+                                                        <div
+                                                            className="min-w-[52px] h-[42px] bg-transparent"
+                                                        />
+                                                    )}
+                                                </React.Fragment>
+                                            ))}
+                                        </div>
+                                        {/* Regular spacing between rows */}
+                                        {rowIndex < Township_ara_right.length - 1 && (
+                                            <div className="h-2" />
+                                        )}
+                                    </React.Fragment>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>
