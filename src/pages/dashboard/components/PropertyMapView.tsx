@@ -40,8 +40,8 @@ const Market_ara_right = [
 ];
 
 const Township_ara_left = [
-    [null, null, null, 699, 698, 697, 692, null, null, 696, 695, 694, 693, 692, 691, 690, 689, 68, 687, 686, 685, 684, 683, 682, null, null, null, null],
-    [null, null, null, 110, 109, 108, 2, null, null, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 0, null, null, null, null, null],
+    [null, null, null, null, 699, 698, 697, 692, null, null, 696, 695, 694, 693, 691, 690, 689, 688, 687, 686, 685, 684, 683, 682, null, null, null],
+    [null, null, null,null, 110, 109, 108, 2, null, null, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 0, null, null, null, null],
     [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
     [167, null, null, 171, 170, 169, 168, 7, null, null, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 3, null, null, null, null, null],
     [166, null, null, null, null, null, null, null, null, null, 149, 148, 147, 146, 145, 144, 143, 142, 141, 140, 139, 138, 137, 5, null, null, null, null, null],
@@ -56,21 +56,22 @@ const Township_ara_left = [
     [157, null, null, 212, null, null, null, 196, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
 
     [156, null, null, null, null, null, null, 195, null, null, 547, null, 556, null, 565, null, null, 250, 249, 248, 247, 27, null, null, 651, 650, 659, 648, 78],
-    [155, null, null, null, null, null, null, 194, null, null, 546, null, 555, null, 564, null, null, 255, null, null, null, 246, null, null, 664, null, null, null, null],
-    [154, null, null, 211, null, null, null, 193, null, null, 545, null, 554, null, 563, null, null, 254, null, null, null, 245, null, null, 663, null, null, null, 647],
-    [153, null, null, 210, null, null, null, 192, null, null, 544, null, 553, null, 562, null, null, 253, null, null, null, null, null, null, 662, null, null, null, 646],
-    [152, null, null, 209, null, null, null, 191, null, null, 543, null, 552, null, 561, null, null, 252, null, null, null, null, null, null, 661, null, null, null, 645],
-    [151, null, null, 208, null, null, null, 190, null, null, 542, null, 551, null, 560, null, null, 251, null, null, null, 244, null, null, 660, null, null, null, 644],
-    [150, null, null, 207, null, null, null, 189, null, null, 541, null, 550, null, 559, null, null, 28, null, null, null, 26, null, null, 659, null, null, null, 643],
-    [6, null, null, 12, null, null, null, 10, null, null, 540, null, 549, null, 558, null, null, 259, 258, 257, 256, 29, null, null, 658, null, null, null, 642],
-    [null, null, null, 188, 187, 186, 185, 9, null, null, 539, null, 548, null, 557, null, null, 264, 263, null, 262, 31, null, null, 657, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null, 62  , null,  63, null, 64, null, null, 266, null, null, null, 31, null, null, 656, null, null, null, 641],
+    [155, null, null, null, null, null, null, 194, null, null, 546, null, 555, null, 564, null, null, 255, null, null, null, 246, null, null, 664, null, null, null, 647],
+    [154, null, null, 211, null, null, null, 193, null, null, 545, null, 554, null, 563, null, null, 254, null, null, null, 245, null, null, 663, null, null, null, 646],
+    [153, null, null, 210, null, null, null, 192, null, null, 544, null, 553, null, 562, null, null, 253, null, null, null, null, null, null, 662, null, null, null, 645],
+    [152, null, null, 209, null, null, null, 191, null, null, 543, null, 552, null, 561, null, null, 252, null, null, null, null, null, null, 661, null, null, null, 644],
+    [151, null, null, 208, null, null, null, 190, null, null, 542, null, 551, null, 560, null, null, 251, null, null, null, 244, null, null, 660, null, null, null, 643],
+    [150, null, null, 207, null, null, null, 189, null, null, 541, null, 550, null, 559, null, null, 28, null, null, null, 26, null, null, 659, null, null, null, 642],
+    [6, null, null, 12, null, null, null, 10, null, null, 540, null, 549, null, 558, null, null, 259, 258, 257, 256, 29, null, null, 658, null, null, null, null],
+    [null, null, null, 188, 187, 186, 185, 9, null, null, 539, null, 548, null, 557, null, null, null, null, null, null, null, null, null, 657, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, 62  , null,  63, null, 64, null, null, 264, 263, null, 262, 31, null, null, 656, null, null, null, 641],
 
-    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 265, null, null, null, 260, null, 655, null, null, null, 640],
-    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 32, null, null, null, 30, null, 654, null, null, null, 639],
-    [null, null, null, null, 222, 221, 220, 219, 13, 636, 635, 634, 77, null, null, null, null, null, 270, 269, 268, 267, 33, null, 653, null, null, null, 638],
-    [null, null, null, null, null, null, null, null, null, null, null, 76, null, null, null, null, null, null, null, null, null, null, null, 652, null, null, null, 637],
-    [null, null, null, null, null, null, null, null, null, null, null, 630, null, null, null, null, null, 271, 272, null, 271, 34, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 266, null, null, null, 261, null,null, 655, null, null, null, 640],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 265, null, null , null,260, null,null, 654, null, null, null, 639],
+    [null, null, null, null, 222, 221, 220, 219, 13, 636, 635, 634, 77, null, null, null, null, 32,  null, null,   null, 30,null,null, 653, null, null, null, 638],
+    [null, null, null, null, null, null, null, null, null, null, null, null, 76, null, null, null,null, 270, 269, 268, 267, 33, null,null, 652, null, null, null, 637],
+    [null, null, null, null, null, null, null, null, null, null, null, null, 630, null, null, null, null,  null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 271, 272, null, 271, 34, null, null, null, null],
 ];
 
 export const PropertyMapView: React.FC<PropertyMapViewProps> = ({
@@ -80,6 +81,7 @@ export const PropertyMapView: React.FC<PropertyMapViewProps> = ({
 }) => {
     const [activeTab, setActiveTab] = useState<'market' | 'residential' | 'township'>('market');
     const [marketSubTab, setMarketSubTab] = useState<'left' | 'right'>('left');
+    const [townshipSubTab, setTownshipSubTab] = useState<'left' | 'right'>('left');
     const [selectedProperty, setSelectedProperty] = useState<PropertyData | null>(null);
     const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
 
@@ -217,9 +219,11 @@ export const PropertyMapView: React.FC<PropertyMapViewProps> = ({
                     </div>
                 )}
                 {activeTab === 'township' && (
-                    <div className="text-center py-12 text-muted-foreground">
-                        Township Area map coming soon...
-                    </div>
+                    <TownshipAreaMap
+                        PropertyBox={PropertyBox}
+                        subTab={townshipSubTab}
+                        setSubTab={setTownshipSubTab}
+                    />
                 )}
             </div>
 
@@ -415,6 +419,128 @@ const MarketAreaMap: React.FC<{
                                 ))}
                             </div>
                         </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+const TownshipAreaMap: React.FC<{
+    PropertyBox: React.FC<{ propertyId: number; highlight?: boolean }>;
+    subTab: 'left' | 'right';
+    setSubTab: (tab: 'left' | 'right') => void;
+}> = ({ PropertyBox, subTab, setSubTab }) => {
+    const scrollRef = React.useRef<HTMLDivElement>(null);
+    const [isDragging, setIsDragging] = React.useState(false);
+    const [startX, setStartX] = React.useState(0);
+    const [scrollLeft, setScrollLeft] = React.useState(0);
+
+    const handleMouseDown = (e: React.MouseEvent) => {
+        if (!scrollRef.current) return;
+        setIsDragging(true);
+        setStartX(e.pageX - scrollRef.current.offsetLeft);
+        setScrollLeft(scrollRef.current.scrollLeft);
+    };
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!isDragging || !scrollRef.current) return;
+        e.preventDefault();
+        const x = e.pageX - scrollRef.current.offsetLeft;
+        const walk = (x - startX) * 2;
+        scrollRef.current.scrollLeft = scrollLeft - walk;
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+    };
+
+    const handleMouseLeave = () => {
+        setIsDragging(false);
+    };
+
+    return (
+        <div className="flex flex-col items-center gap-6 py-4">
+            {/* Sub-tab Navigation */}
+            <div className="flex items-center gap-2 bg-white dark:bg-gray-800 p-1 rounded-lg shadow-md">
+                <button
+                    onClick={() => setSubTab('left')}
+                    className={`px-6 py-2 rounded-md font-semibold transition-all ${subTab === 'left'
+                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                        }`}
+                >
+                    Left Side
+                </button>
+                <button
+                    onClick={() => setSubTab('right')}
+                    className={`px-6 py-2 rounded-md font-semibold transition-all ${subTab === 'right'
+                        ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                        }`}
+                >
+                    Right Side
+                </button>
+            </div>
+
+            {/* Content - Show only active sub-tab */}
+            <div 
+                ref={scrollRef}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
+                className="overflow-x-auto cursor-grab active:cursor-grabbing w-full"
+            >
+                {subTab === 'left' && (
+                    <div className="flex flex-col items-start gap-4 w-max mx-auto">
+                        <div className="flex gap-4 items-center w-max">
+                            <div className="flex flex-col bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-inner">
+                                <div className='flex justify-center pb-4'>
+                                    <div className="bg-gray-300 dark:bg-gray-600 px-8 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm">
+                                        bridge to township
+                                    </div>
+                                </div>
+                                {Township_ara_left.map((row, rowIndex) => (
+                                    <React.Fragment key={rowIndex}>
+                                        <div className="flex items-center gap-0.5">
+                                            {row.map((propertyId, colIndex) => (
+                                                <React.Fragment key={colIndex}>
+                                                    {propertyId !== null ? (
+                                                        <PropertyBox
+                                                            propertyId={propertyId}
+                                                        />
+                                                    ) : (
+                                                        <div
+                                                            className="min-w-[52px] h-[42px] bg-transparent"
+                                                        />
+                                                    )}
+                                                    {/* Add gap after every 2 columns */}
+                                                
+                                                </React.Fragment>
+                                            ))}
+                                        </div>
+                                        {/* Regular spacing between rows */}
+                                        {rowIndex < Township_ara_left.length - 1 && (
+                                            <div className="h-2" />
+                                        )}
+                                    </React.Fragment>
+                                ))}
+                            </div>
+
+                            {/* Main Middle Road Indicator - Right Side */}
+                            <div className="relative flex items-center">
+                                <div className="absolute left-0 bg-gray-300 dark:bg-gray-600 tracking-wider px-4 py-1 rounded text-xs font-bold text-white shadow-sm transform rotate-90 whitespace-nowrap origin-center">
+                                    main road
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {subTab === 'right' && (
+                    <div className="text-center py-12 text-muted-foreground">
+                        Township Right Side coming soon...
                     </div>
                 )}
             </div>
