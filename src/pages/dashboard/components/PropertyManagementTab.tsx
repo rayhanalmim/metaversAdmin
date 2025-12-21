@@ -2,11 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/custom/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Search, ChevronLeft, ChevronRight, User, Building } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, User, Building, Grid3x3, Map as MapIcon } from 'lucide-react';
 import AdminAPI, { MetaverseUser } from '@/services/api';
 import { toast } from '@/components/ui/use-toast';
+import { PropertyMapView } from './PropertyMapView';
 
 interface PropertyData {
     id: number;
@@ -29,6 +30,7 @@ export const PropertyManagementTab: React.FC<PropertyManagementTabProps> = ({ us
     const [selectedProperty, setSelectedProperty] = useState<PropertyData | null>(null);
     const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [viewMode, setViewMode] = useState<'grid' | 'map'>('map');
 
     // Initialize properties data (1-1000)
     const initializeProperties = useCallback(async () => {
@@ -219,6 +221,27 @@ export const PropertyManagementTab: React.FC<PropertyManagementTabProps> = ({ us
                     </p>
                 </div>
                 <div className="flex items-center gap-4">
+                    {/* View Mode Toggle */}
+                    <div className="flex items-center border rounded-lg">
+                        <Button
+                            variant={viewMode === 'map' ? 'default' : 'ghost'}
+                            size="sm"
+                            onClick={() => setViewMode('map')}
+                            className="rounded-r-none"
+                        >
+                            <MapIcon className="h-4 w-4 mr-2" />
+                            Map View
+                        </Button>
+                        <Button
+                            variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                            size="sm"
+                            onClick={() => setViewMode('grid')}
+                            className="rounded-l-none"
+                        >
+                            <Grid3x3 className="h-4 w-4 mr-2" />
+                            Grid View
+                        </Button>
+                    </div>
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                         <Input
@@ -257,6 +280,15 @@ export const PropertyManagementTab: React.FC<PropertyManagementTabProps> = ({ us
                 </div>
             </div>
 
+            {/* Content - Map or Grid View */}
+            {viewMode === 'map' ? (
+                <PropertyMapView 
+                    users={users} 
+                    properties={properties}
+                    onPropertyUpdate={initializeProperties}
+                />
+            ) : (
+            <>
             {/* Property Grid */}
             <div className="grid grid-cols-10 gap-2">
                 {currentProperties.map(property => (
@@ -343,6 +375,8 @@ export const PropertyManagementTab: React.FC<PropertyManagementTabProps> = ({ us
                         </Button>
                     </div>
                 </div>
+            )}
+            </>
             )}
 
             {/* Property Assignment Dialog */}
