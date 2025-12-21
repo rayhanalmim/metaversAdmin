@@ -7,12 +7,11 @@ import router from '@/router';
 import { ThemeColorProvider } from './context/ThemeColorContext';
 import { UserProvider } from './context/UserContext';
 
-// Create a client
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            refetchOnWindowFocus: false, // Disable refetch on window focus
-            retry: 1, // Only retry failed requests once
+            refetchOnWindowFocus: false, 
+            retry: 1, 
         },
     },
 })
