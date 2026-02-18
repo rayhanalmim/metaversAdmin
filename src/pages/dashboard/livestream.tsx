@@ -317,13 +317,23 @@ const LiveStreamPage: React.FC = () => {
 
     return (
         <Layout>
-            <Layout.Body className="space-y-4 p-4 md:p-6">
-                <div className="flex items-center justify-between">
-                    <div className="min-w-0 flex-1">
-                        <Header />
+            <Header />
+            <Layout.Body className='max-w-[2000px] mx-auto'>
+                <div className='mb-2 flex items-center justify-between space-y-2'>
+                    <div className=''>
+                        <h2 className='text-2xl font-bold tracking-tight'>Live Streams</h2>
+                        <p className='text-muted-foreground'>
+                            Manage YouTube live streams for your metaverse world.
+                        </p>
+                    </div>
+                    <div className='flex items-center space-x-2'>
+                        <Button onClick={handleRefresh} disabled={refreshing}>
+                            <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+                            Refresh
+                        </Button>
                     </div>
                 </div>
-                
+
                 <div className="space-y-4 md:space-y-6">
                     {/* Stats Cards */}
                     {stats && (

@@ -4,6 +4,7 @@ import {
   IconDiamond,
   IconShoppingCart,
   IconVideo,
+  IconBroadcast,
 } from '@tabler/icons-react'
 
 export interface NavLink {
@@ -47,5 +48,11 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: '/dashboard/livestream',
     icon: <IconVideo size={18} />,
+  },
+  {
+    title: 'User Streams',
+    label: '',
+    href: '/dashboard/user-streams',
+    icon: <IconBroadcast size={18} />,
   }
 ]

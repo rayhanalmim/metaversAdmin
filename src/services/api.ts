@@ -410,6 +410,86 @@ export class AdminAPI {
     static async getUsageAnalytics(): Promise<unknown> {
         return null;
     }
+
+    // ─── User Streams ─────────────────────────────────────────
+
+    static async getAllUserStreams(page = 1, limit = 10, status?: string): Promise<any> {
+        const params: any = { page, limit };
+        if (status) params.status = status;
+        const response = await api.get('/api/admin/user-streams', { params });
+        return response.data;
+    }
+
+    static async getUserStreamStats(): Promise<any> {
+        const response = await api.get('/api/admin/user-streams/stats');
+        return response.data;
+    }
+
+    static async updateUserStreamStatus(id: number, status: string): Promise<any> {
+        const response = await api.patch(`/api/admin/user-streams/${id}/status`, { status });
+        return response.data;
+    }
+
+    static async deleteUserStream(id: number): Promise<any> {
+        const response = await api.delete(`/api/admin/user-streams/${id}`);
+        return response.data;
+    }
+
+    // ─── Streamer Applications ────────────────────────────────
+
+    static async getAllStreamerApplications(page = 1, limit = 10, status?: string): Promise<any> {
+        const params: any = { page, limit };
+        if (status) params.status = status;
+        const response = await api.get('/api/admin/streamer-applications', { params });
+        return response.data;
+    }
+
+    static async reviewStreamerApplication(id: number, status: string, adminNote?: string): Promise<any> {
+        const response = await api.patch(`/api/admin/streamer-applications/${id}/review`, { status, admin_note: adminNote });
+        return response.data;
+    }
+
+    // ─── Gifts & Stickers ────────────────────────────────────
+
+    static async getAllGifts(): Promise<any> {
+        const response = await api.get('/api/admin/gifts');
+        return response.data;
+    }
+
+    static async createGift(data: { name: string; icon_url?: string; sgk_weight?: number; price_usdt?: number }): Promise<any> {
+        const response = await api.post('/api/admin/gifts', data);
+        return response.data;
+    }
+
+    static async updateGift(id: number, data: { name?: string; icon_url?: string; sgk_weight?: number; price_usdt?: number; is_active?: boolean }): Promise<any> {
+        const response = await api.put(`/api/admin/gifts/${id}`, data);
+        return response.data;
+    }
+
+    static async deleteGift(id: number): Promise<any> {
+        const response = await api.delete(`/api/admin/gifts/${id}`);
+        return response.data;
+    }
+
+    static async getAllStickers(): Promise<any> {
+        const response = await api.get('/api/admin/stickers');
+        return response.data;
+    }
+
+    static async createSticker(data: { name: string; image_url?: string }): Promise<any> {
+        const response = await api.post('/api/admin/stickers', data);
+        return response.data;
+    }
+
+    static async updateSticker(id: number, data: { name?: string; image_url?: string; is_active?: boolean }): Promise<any> {
+        const response = await api.put(`/api/admin/stickers/${id}`, data);
+        return response.data;
+    }
+
+    static async deleteSticker(id: number): Promise<any> {
+        const response = await api.delete(`/api/admin/stickers/${id}`);
+        return response.data;
+    }
 }
 
 export default AdminAPI;

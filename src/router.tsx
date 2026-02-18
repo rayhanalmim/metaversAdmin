@@ -78,6 +78,12 @@ const router = createBrowserRouter([
           Component: (await import('./pages/dashboard/livestream')).default,
         }),
       },
+      {
+        path: 'user-streams',
+        lazy: async () => ({
+          Component: (await import('./pages/dashboard/user-streams')).default,
+        }),
+      },
     ],
   },
 
