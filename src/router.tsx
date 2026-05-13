@@ -84,6 +84,12 @@ const router = createBrowserRouter([
           Component: (await import('./pages/dashboard/user-streams')).default,
         }),
       },
+      {
+        path: 'ai-samurai',
+        lazy: async () => ({
+          Component: (await import('./pages/dashboard/ai-samurai')).default,
+        }),
+      },
     ],
   },
 

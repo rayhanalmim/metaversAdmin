@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import router from '@/router';
 import { ThemeColorProvider } from './context/ThemeColorContext';
 import { UserProvider } from './context/UserContext';
+import { I18nProvider } from './i18n/I18nContext';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -23,8 +24,10 @@ export default function App() {
                     <UserProvider>
                         <ThemeColorProvider>
                             <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-                                <RouterProvider router={router} />
-                                <Toaster />
+                                <I18nProvider>
+                                    <RouterProvider router={router} />
+                                    <Toaster />
+                                </I18nProvider>
                             </ThemeProvider>
                         </ThemeColorProvider>
                     </UserProvider>

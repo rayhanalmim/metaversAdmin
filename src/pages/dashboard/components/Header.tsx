@@ -3,8 +3,11 @@ import { Layout } from '@/components/custom/layout';
 import { Search } from '@/components/search';
 import ThemeSwitch from '@/components/theme-switch';
 import { UserNav } from '@/components/user-nav';
+import LanguageSwitcher from '@/components/language-switcher';
+import { useT } from '@/i18n/I18nContext';
 
 const Header = () => {
+    const t = useT();
     return (
         <Layout.Header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="flex h-14 items-center justify-between w-full gap-4 px-6">
@@ -16,10 +19,13 @@ const Header = () => {
 
                 {/* Right section */}
                 <div className="flex items-center gap-4">
+                    {/* Language switcher (global) */}
+                    <LanguageSwitcher />
+
                     {/* Notifications */}
                     <div className="hidden md:flex items-center gap-2">
                         <Button variant="outline" size="sm">
-                            Documentation
+                            {t('common.documentation')}
                         </Button>
                     </div>
                     <Button variant="ghost" size="icon" className="relative">

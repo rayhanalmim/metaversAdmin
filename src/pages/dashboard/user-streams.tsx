@@ -35,6 +35,7 @@ import {
 } from '@/components/ui/tabs';
 import AdminAPI from '@/services/api';
 import Header from './components/Header';
+import { useT } from '@/i18n/I18nContext';
 
 const statusColors: Record<string, string> = {
     pending: 'bg-yellow-500',
@@ -45,6 +46,7 @@ const statusColors: Record<string, string> = {
 };
 
 const UserStreamsPage: React.FC = () => {
+    const t = useT();
     const [refreshing, setRefreshing] = useState(false);
     const [streams, setStreams] = useState<any[]>([]);
     const [applications, setApplications] = useState<any[]>([]);
@@ -214,9 +216,9 @@ const UserStreamsPage: React.FC = () => {
             <Layout.Body className='max-w-[2000px] mx-auto'>
                 <div className='mb-2 flex items-center justify-between space-y-2'>
                     <div className=''>
-                        <h2 className='text-2xl font-bold tracking-tight'>User Streams</h2>
+                        <h2 className='text-2xl font-bold tracking-tight'>{t('user_streams.title')}</h2>
                         <p className='text-muted-foreground'>
-                            Manage user live streams, streamer applications, and configure gifts.
+                            {t('user_streams.subtitle')}
                         </p>
                     </div>
                     <div className='flex items-center space-x-2'>
@@ -232,42 +234,42 @@ const UserStreamsPage: React.FC = () => {
                     <div className="grid gap-3 grid-cols-2 lg:grid-cols-6">
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-xs font-medium">Total Streams</CardTitle>
+                                <CardTitle className="text-xs font-medium">{t('user_streams.total_streams')}</CardTitle>
                                 <Radio className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent><div className="text-2xl font-bold">{stats.totalStreams}</div></CardContent>
                         </Card>
                         <Card className="border-red-200 bg-red-50 dark:bg-red-950">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-xs font-medium text-red-800 dark:text-red-200">Live Now</CardTitle>
+                                <CardTitle className="text-xs font-medium text-red-800 dark:text-red-200">{t('user_streams.live_now')}</CardTitle>
                                 <Radio className="h-4 w-4 text-red-500" />
                             </CardHeader>
                             <CardContent><div className="text-2xl font-bold text-red-600">{stats.liveStreams}</div></CardContent>
                         </Card>
                         <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-xs font-medium text-yellow-800 dark:text-yellow-200">Pending</CardTitle>
+                                <CardTitle className="text-xs font-medium text-yellow-800 dark:text-yellow-200">{t('user_streams.pending')}</CardTitle>
                                 <Clock className="h-4 w-4 text-yellow-500" />
                             </CardHeader>
                             <CardContent><div className="text-2xl font-bold text-yellow-600">{stats.pendingStreams}</div></CardContent>
                         </Card>
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-xs font-medium">Total Slots</CardTitle>
+                                <CardTitle className="text-xs font-medium">{t('user_streams.total_slots')}</CardTitle>
                                 <Users className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent><div className="text-2xl font-bold">{stats.totalSlots}</div></CardContent>
                         </Card>
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-xs font-medium">Gifts Sent</CardTitle>
+                                <CardTitle className="text-xs font-medium">{t('user_streams.gifts_sent')}</CardTitle>
                                 <Gift className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent><div className="text-2xl font-bold">{stats.totalGifts}</div></CardContent>
                         </Card>
                         <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-xs font-medium text-amber-800 dark:text-amber-200">Total SGK</CardTitle>
+                                <CardTitle className="text-xs font-medium text-amber-800 dark:text-amber-200">{t('user_streams.total_sgk')}</CardTitle>
                                 <Award className="h-4 w-4 text-amber-500" />
                             </CardHeader>
                             <CardContent><div className="text-2xl font-bold text-amber-600">{stats.totalSgk}</div></CardContent>
@@ -277,16 +279,16 @@ const UserStreamsPage: React.FC = () => {
 
                 <Tabs defaultValue="streams" className="my-4">
                     <TabsList>
-                        <TabsTrigger value="streams">Streams</TabsTrigger>
+                        <TabsTrigger value="streams">{t('user_streams.tab_streams')}</TabsTrigger>
                         <TabsTrigger value="applications">
-                            Applications
+                            {t('user_streams.tab_applications')}
                             {applications.filter(a => a.status === 'pending').length > 0 && (
                                 <Badge variant="destructive" className="ml-2 text-xs px-1.5">
                                     {applications.filter(a => a.status === 'pending').length}
                                 </Badge>
                             )}
                         </TabsTrigger>
-                        <TabsTrigger value="gifts">Gifts</TabsTrigger>
+                        <TabsTrigger value="gifts">{t('user_streams.tab_gifts')}</TabsTrigger>
                     </TabsList>
 
                     {/* STREAMS TAB */}

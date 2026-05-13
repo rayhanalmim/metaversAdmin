@@ -3,8 +3,9 @@ import { IconChevronsLeft, IconMenu2, IconX } from '@tabler/icons-react'
 import { Layout } from './custom/layout'
 import Nav from './nav'
 import { cn } from '@/lib/utils'
-import { sidelinks } from '@/data/sidelinks'
+import { useSidelinks } from '@/data/sidelinks'
 import { Button } from '@/components/custom/button'
+import { useT } from '@/i18n/I18nContext'
 
 interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   isCollapsed: boolean
@@ -17,6 +18,8 @@ export default function Sidebar({
   setIsCollapsed,
 }: SidebarProps) {
   const [navOpened, setNavOpened] = useState(false)
+  const links = useSidelinks()
+  const t = useT()
 
   /* Make body not scrollable when navBar is opened */
   useEffect(() => {
@@ -78,7 +81,7 @@ export default function Sidebar({
               <span className='sr-only'>Website Name</span>
             </svg>
             <div className={`text-lg font-bold ${!isCollapsed ? 'block' : 'hidden'}`}>
-              Metaverse Admin
+              {t('common.dashboard') === 'ダッシュボード' ? 'メタバース管理' : 'Metaverse Admin'}
             </div>
           </div>
 
@@ -102,7 +105,7 @@ export default function Sidebar({
           className={`z-40 h-full flex-1 overflow-auto ${navOpened ? 'max-h-screen' : 'max-h-0 py-0 md:max-h-screen md:py-2'}`}
           closeNav={() => setNavOpened(false)}
           isCollapsed={isCollapsed}
-          links={sidelinks}
+          links={links}
         />
 
         {/* Scrollbar width toggle button */}

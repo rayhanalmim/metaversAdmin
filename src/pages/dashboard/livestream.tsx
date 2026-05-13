@@ -32,6 +32,7 @@ import {
 import { Label } from '@/components/ui/label';
 import AdminAPI, { LiveStream, LiveStreamStats } from '@/services/api';
 import Header from './components/Header';
+import { useT } from '@/i18n/I18nContext';
 
 // Add custom styles for mobile responsiveness
 const customStyles = `
@@ -64,6 +65,7 @@ if (typeof document !== 'undefined') {
 }
 
 const LiveStreamPage: React.FC = () => {
+    const t = useT();
     const [refreshing, setRefreshing] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [authChecked, setAuthChecked] = useState(false);
@@ -321,9 +323,9 @@ const LiveStreamPage: React.FC = () => {
             <Layout.Body className='max-w-[2000px] mx-auto'>
                 <div className='mb-2 flex items-center justify-between space-y-2'>
                     <div className=''>
-                        <h2 className='text-2xl font-bold tracking-tight'>Live Streams</h2>
+                        <h2 className='text-2xl font-bold tracking-tight'>{t('livestream.title')}</h2>
                         <p className='text-muted-foreground'>
-                            Manage YouTube live streams for your metaverse world.
+                            {t('livestream.subtitle')}
                         </p>
                     </div>
                     <div className='flex items-center space-x-2'>

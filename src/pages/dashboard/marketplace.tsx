@@ -4,8 +4,10 @@ import { Button } from '@/components/custom/button';
 import { RefreshCw, Download } from 'lucide-react';
 import AdminAPI, { MarketplaceAnalytics } from '@/services/api';
 import Header from './components/Header';
+import { useT } from '@/i18n/I18nContext';
 
 const MarketplacePage: React.FC = () => {
+    const t = useT();
     const [refreshing, setRefreshing] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [authChecked, setAuthChecked] = useState(false);
@@ -106,9 +108,9 @@ const MarketplacePage: React.FC = () => {
             <Layout.Body className='max-w-[2000px] mx-auto'>
                 <div className='mb-2 flex items-center justify-between space-y-2'>
                     <div className=''>
-                        <h2 className='text-2xl font-bold tracking-tight'>Marketplace</h2>
+                        <h2 className='text-2xl font-bold tracking-tight'>{t('marketplace.title')}</h2>
                         <p className='text-muted-foreground'>
-                            Monitor marketplace activity, sales, and trading volume.
+                            {t('marketplace.subtitle')}
                         </p>
                     </div>
                     <div className='flex items-center space-x-2'>
