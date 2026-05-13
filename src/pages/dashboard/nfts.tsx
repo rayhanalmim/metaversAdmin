@@ -5,8 +5,10 @@ import { RefreshCw, Download } from 'lucide-react';
 import AdminAPI, { MetaverseNFT } from '@/services/api';
 import { downloadCSV, generateCSV } from './utils';
 import Header from './components/Header';
+import { useT } from '@/i18n/I18nContext';
 
 const NFTsPage: React.FC = () => {
+    const t = useT();
     const [refreshing, setRefreshing] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [authChecked, setAuthChecked] = useState(false);
@@ -108,9 +110,9 @@ const NFTsPage: React.FC = () => {
             <Layout.Body className='max-w-[2000px] mx-auto'>
                 <div className='mb-2 flex items-center justify-between space-y-2'>
                     <div className=''>
-                        <h2 className='text-2xl font-bold tracking-tight'>NFTs</h2>
+                        <h2 className='text-2xl font-bold tracking-tight'>{t('nfts.title')}</h2>
                         <p className='text-muted-foreground'>
-                            Monitor and manage NFT collections in the metaverse marketplace.
+                            {t('nfts.subtitle')}
                         </p>
                     </div>
                     <div className='flex items-center space-x-2'>

@@ -16,8 +16,10 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
+import { useT } from '@/i18n/I18nContext';
 
 const UsersPage: React.FC = () => {
+    const t = useT();
     const [refreshing, setRefreshing] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [authChecked, setAuthChecked] = useState(false);
@@ -206,9 +208,9 @@ const UsersPage: React.FC = () => {
             <Layout.Body className='max-w-[2000px] mx-auto'>
                 <div className='mb-2 flex items-center justify-between space-y-2'>
                     <div className=''>
-                        <h2 className='text-2xl font-bold tracking-tight'>Users</h2>
+                        <h2 className='text-2xl font-bold tracking-tight'>{t('users.title')}</h2>
                         <p className='text-muted-foreground'>
-                            Manage and monitor metaverse users, their avatars, and activity.
+                            {t('users.subtitle')}
                         </p>
                     </div>
                     <div className='flex items-center space-x-2'>

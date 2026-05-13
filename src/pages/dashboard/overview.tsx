@@ -13,8 +13,10 @@ import { MetaverseOverviewTab } from './components/MetaverseOverviewTab';
 import { UserStatsPage } from './components/UserStatsPage';
 import { RevenueStatsPage } from './components/RevenueStatsPage';
 import Header from './components/Header';
+import { useT } from '@/i18n/I18nContext';
 
 const OverviewPage: React.FC = () => {
+    const t = useT();
     const [refreshing, setRefreshing] = useState(false);
     const [showUserStats, setShowUserStats] = useState(false);
     const [showRevenueStats, setShowRevenueStats] = useState(false);
@@ -168,7 +170,7 @@ const OverviewPage: React.FC = () => {
                     <div className="flex items-center justify-center h-96">
                         <div className="text-center">
                             <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4" />
-                            <p>Checking authentication...</p>
+                            <p>{t('common.loading')}</p>
                         </div>
                     </div>
                 </Layout.Body>
@@ -182,15 +184,15 @@ const OverviewPage: React.FC = () => {
             <Layout.Body className='max-w-[2000px] mx-auto'>
                 <div className='mb-2 flex items-center justify-between space-y-2'>
                     <div className=''>
-                        <h2 className='text-2xl font-bold tracking-tight'>Overview</h2>
+                        <h2 className='text-2xl font-bold tracking-tight'>{t('overview.title')}</h2>
                         <p className='text-muted-foreground'>
-                            Welcome to your Metaverse Analytics Hub - Monitor users, NFTs, marketplace activity, and virtual world insights in real-time.
+                            {t('overview.welcome')}
                         </p>
                     </div>
                     <div className='flex items-center space-x-2'>
                         <Button onClick={handleRefresh} disabled={refreshing}>
                             <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-                            Refresh Data
+                            {t('common.refresh')}
                         </Button>
                     </div>
                 </div>

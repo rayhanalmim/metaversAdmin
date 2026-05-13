@@ -490,6 +490,83 @@ export class AdminAPI {
         const response = await api.delete(`/api/admin/stickers/${id}`);
         return response.data;
     }
+
+    // ─── AI Samurai Guide (NPC) ───────────────────────────────
+
+    static async getNpcWorldState(): Promise<any> {
+        const response = await api.get('/api/admin/npc/world-state');
+        return response.data;
+    }
+
+    static async updateNpcWorldState(data: { time_of_day?: 'day' | 'night'; world_state?: string; mission_available?: boolean }): Promise<any> {
+        const response = await api.put('/api/admin/npc/world-state', data);
+        return response.data;
+    }
+
+    static async listNpcCategories(): Promise<any> {
+        const response = await api.get('/api/admin/npc/categories');
+        return response.data;
+    }
+
+    static async createNpcCategory(data: { category_id: string; label: string; display_order?: number; is_active?: boolean }): Promise<any> {
+        const response = await api.post('/api/admin/npc/categories', data);
+        return response.data;
+    }
+
+    static async updateNpcCategory(id: number, data: any): Promise<any> {
+        const response = await api.put(`/api/admin/npc/categories/${id}`, data);
+        return response.data;
+    }
+
+    static async deleteNpcCategory(id: number): Promise<any> {
+        const response = await api.delete(`/api/admin/npc/categories/${id}`);
+        return response.data;
+    }
+
+    static async listNpcGreetings(npcId?: string): Promise<any> {
+        const params = npcId ? `?npc_id=${npcId}` : '';
+        const response = await api.get(`/api/admin/npc/greetings${params}`);
+        return response.data;
+    }
+
+    static async createNpcGreeting(data: any): Promise<any> {
+        const response = await api.post('/api/admin/npc/greetings', data);
+        return response.data;
+    }
+
+    static async updateNpcGreeting(id: number, data: any): Promise<any> {
+        const response = await api.put(`/api/admin/npc/greetings/${id}`, data);
+        return response.data;
+    }
+
+    static async deleteNpcGreeting(id: number): Promise<any> {
+        const response = await api.delete(`/api/admin/npc/greetings/${id}`);
+        return response.data;
+    }
+
+    static async listNpcResponses(filters?: { npc_id?: string; category_id?: string }): Promise<any> {
+        const params = new URLSearchParams();
+        if (filters?.npc_id) params.append('npc_id', filters.npc_id);
+        if (filters?.category_id) params.append('category_id', filters.category_id);
+        const qs = params.toString() ? `?${params}` : '';
+        const response = await api.get(`/api/admin/npc/responses${qs}`);
+        return response.data;
+    }
+
+    static async createNpcResponse(data: any): Promise<any> {
+        const response = await api.post('/api/admin/npc/responses', data);
+        return response.data;
+    }
+
+    static async updateNpcResponse(id: number, data: any): Promise<any> {
+        const response = await api.put(`/api/admin/npc/responses/${id}`, data);
+        return response.data;
+    }
+
+    static async deleteNpcResponse(id: number): Promise<any> {
+        const response = await api.delete(`/api/admin/npc/responses/${id}`);
+        return response.data;
+    }
 }
 
 export default AdminAPI;

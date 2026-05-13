@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Gamepad2, ShoppingBag, MapPin, Crown, TrendingUp } from 'lucide-react';
 import { MetaverseDashboardStats, MetaverseRealtimeStats } from '@/services/api';
 import { formatNumber, formatCurrency } from '../utils';
+import { useT } from '@/i18n/I18nContext';
 
 interface MetaverseStatsCardsProps {
     dashboardStats: MetaverseDashboardStats | null;
@@ -21,12 +22,13 @@ export const MetaverseStatsCards = ({
     onShowUserStats,
     onShowRevenueStats
 }: MetaverseStatsCardsProps) => {
+    const t = useT();
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Total Avatars */}
             <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={onShowUserStats}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Total Avatars</CardTitle>
+                    <CardTitle className="text-sm font-medium">{t('overview.total_avatars')}</CardTitle>
                     <Users className="h-4 w-4 text-blue-600" />
                 </CardHeader>
                 <CardContent>
@@ -38,7 +40,7 @@ export const MetaverseStatsCards = ({
                         )}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                        {loading.realtime ? '...' : `+${realtimeStats?.newUsersToday || 0} today`}
+                        {loading.realtime ? '...' : t('overview.total_avatars_today', { n: realtimeStats?.newUsersToday || 0 })}
                     </p>
                 </CardContent>
             </Card>
@@ -46,7 +48,7 @@ export const MetaverseStatsCards = ({
             {/* Total Items */}
             <Card className="cursor-pointer hover:shadow-lg transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Virtual Items</CardTitle>
+                    <CardTitle className="text-sm font-medium">{t('overview.virtual_items')}</CardTitle>
                     <ShoppingBag className="h-4 w-4 text-green-600" />
                 </CardHeader>
                 <CardContent>
@@ -58,7 +60,7 @@ export const MetaverseStatsCards = ({
                         )}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                        {loading.realtime ? '...' : `+${realtimeStats?.newNFTsToday || 0} new today`}
+                        {loading.realtime ? '...' : t('overview.virtual_items_new', { n: realtimeStats?.newNFTsToday || 0 })}
                     </p>
                 </CardContent>
             </Card>
@@ -66,7 +68,7 @@ export const MetaverseStatsCards = ({
             {/* Active Listings */}
             <Card className="cursor-pointer hover:shadow-lg transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Active Listings</CardTitle>
+                    <CardTitle className="text-sm font-medium">{t('overview.active_listings')}</CardTitle>
                     <MapPin className="h-4 w-4 text-purple-600" />
                 </CardHeader>
                 <CardContent>
@@ -78,7 +80,7 @@ export const MetaverseStatsCards = ({
                         )}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                        {loading.realtime ? '...' : `${dashboardStats?.activeUsers || 0} users online`}
+                        {loading.realtime ? '...' : t('overview.users_online', { n: dashboardStats?.activeUsers || 0 })}
                     </p>
                 </CardContent>
             </Card>
@@ -86,7 +88,7 @@ export const MetaverseStatsCards = ({
             {/* Revenue */}
             <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={onShowRevenueStats}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                    <CardTitle className="text-sm font-medium">{t('overview.total_revenue')}</CardTitle>
                     <TrendingUp className="h-4 w-4 text-orange-600" />
                 </CardHeader>
                 <CardContent>
@@ -98,7 +100,7 @@ export const MetaverseStatsCards = ({
                         )}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                        {loading.realtime ? '...' : `+${formatCurrency(0)} today`}
+                        {loading.realtime ? '...' : t('overview.revenue_today', { amount: formatCurrency(0) })}
                     </p>
                 </CardContent>
             </Card>
